@@ -1,5 +1,6 @@
 package com.example.tfg.ui.login;
 
+import android.content.Intent;
 import android.util.Patterns;
 
 import androidx.lifecycle.LiveData;
@@ -10,6 +11,7 @@ import com.example.tfg.R;
 import com.example.tfg.data.LoginRepository;
 import com.example.tfg.data.Result;
 import com.example.tfg.data.model.LoggedInUser;
+import com.example.tfg.map.MapActivity;
 
 public class LoginViewModel extends ViewModel {
 
@@ -17,6 +19,8 @@ public class LoginViewModel extends ViewModel {
     private MutableLiveData<LoginResult> loginResult = new MutableLiveData<>();
     private LoginRepository loginRepository;
     private MutableLiveData<String> toastMessage = new MutableLiveData<>();
+
+    private MutableLiveData<Boolean> loginSuccessful = new MutableLiveData<>();
 
     LoginViewModel(LoginRepository loginRepository) {
         this.loginRepository = loginRepository;
@@ -30,14 +34,20 @@ public class LoginViewModel extends ViewModel {
         return loginResult;
     }
 
-    public void login(String username, String password) {
+    public LiveData<Boolean> isLoginSuccessful() {
+        return loginSuccessful;
+    }
+
+    public boolean login(String username, String password) {
         // can be launched in a separate asynchronous job
         Result<LoggedInUser> result = loginRepository.login(username, password);
 
         if (username.equals("oscar") && password.equals("123456")) {
             toastMessage.setValue("Bienvenido, " + username);
+            return true;
         } else {
             toastMessage.setValue("Credenciales incorrectas");
+            return false;
         }
     }
 

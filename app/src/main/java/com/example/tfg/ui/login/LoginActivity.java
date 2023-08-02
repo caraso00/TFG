@@ -21,6 +21,7 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.example.tfg.R;
 import com.example.tfg.databinding.ActivityLoginBinding;
+import com.example.tfg.map.MapActivity;
 import com.example.tfg.register.RegisterActivity;
 
 public class LoginActivity extends AppCompatActivity {
@@ -119,8 +120,15 @@ public class LoginActivity extends AppCompatActivity {
         loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                loginViewModel.login(usernameEditText.getText().toString(),
-                        passwordEditText.getText().toString());
+                if (loginViewModel.login(usernameEditText.getText().toString(),
+                        passwordEditText.getText().toString())) {
+
+                    Intent homeIntent = new Intent(LoginActivity.this, MapActivity.class);
+                    startActivity(homeIntent);
+                    overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+                    finish();
+
+                }
             }
         });
 
@@ -129,6 +137,8 @@ public class LoginActivity extends AppCompatActivity {
             public void onClick(View v) {
                 Intent intent = new Intent(LoginActivity.this, RegisterActivity.class);
                 startActivity(intent);
+                overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+                finish();
             }
         });
     }
