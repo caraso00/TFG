@@ -11,6 +11,34 @@
     android:paddingBottom="@dimen/activity_vertical_margin"
     tools:context=".map.MapActivity">
 
+    <TextView
+        android:id="@+id/distance_filter_title"
+        android:layout_width="114dp"
+        android:layout_height="36dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="5dp"
+        android:text="Distancia:"
+        android:textColor="#FFFFFF"
+        android:textSize="20sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <Spinner
+        android:id="@+id/spinner"
+        android:layout_width="118dp"
+        android:layout_height="47dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="3dp"
+        android:backgroundTint="#FFFFFF"
+        android:entries="@array/distance_options"
+        android:foregroundTint="#FFFFFF"
+        android:outlineAmbientShadowColor="#FFFFFF"
+        android:outlineSpotShadowColor="#FFFFFF"
+        android:spinnerMode="dropdown"
+        android:textColor="@color/white"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/distance_filter_title" />
+
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/top_navigation"
         android:layout_width="90dp"

@@ -3,6 +3,7 @@ package com.example.tfg.map;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
+import androidx.lifecycle.ViewModelProvider;
 
 import android.Manifest;
 import android.app.Activity;
@@ -16,7 +17,10 @@ import android.location.Location;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.os.Looper;
+import android.util.Log;
 import android.view.MenuItem;
+import android.widget.ArrayAdapter;
+import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.example.tfg.R;
@@ -50,14 +54,21 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
 
     private GoogleMap mMap;
     private FusedLocationProviderClient fusedLocationClient;
+
+    private MapActivityViewModel viewModel;
+
+    private Spinner distanceSpinner;
     private static final int LOCATION_PERMISSION_REQUEST_CODE = 1;
 
-    private static final int REQUEST_CHECK_SETTINGS = 0;
+    private static final int REQUEST_CHECK_SETTINGS = 2;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_map);
+
+        // Inicializamos el ViewModel
+        viewModel = new ViewModelProvider(this).get(MapActivityViewModel.class);
 
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
@@ -65,7 +76,8 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
 
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
 
-        checkAndRequestPermissions();
+        // Llamada al ViewModel para pedir permisos
+        viewModel.checkAndRequestPermissions(this);
 
         BottomNavigationView navView = findViewById(R.id.navigation);
         navView.setSelectedItemId(R.id.navigation_home);
@@ -101,14 +113,28 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                 return false;
             }
         });
+
+        // Inicializar Spinner
+        distanceSpinner = findViewById(R.id.spinner);
+        // Observamos el LiveData para la configuración de ubicación
+        viewModel.getLocationSettingResponse().observe(this, isLocationSettingSatisfied -> {
+            if (Boolean.TRUE.equals(isLocationSettingSatisfied)) {
+                onLocationActivated();
+            } else {
+                onLocationDeactivated();
+            }
+        });
+
+        // Observamos el LiveData para excepciones resolubles
+        viewModel.getResolvableApiException().observe(this, resolvable -> {
+            try {
+                resolvable.startResolutionForResult(MapActivity.this, REQUEST_CHECK_SETTINGS);
+            } catch (IntentSender.SendIntentException sendEx) {
+                onLocationDeactivated();
+            }
+        });
     }
 
-    private void checkAndRequestPermissions() {
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
-                ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(this, new String[] {Manifest.permission.ACCESS_FINE_LOCATION}, LOCATION_PERMISSION_REQUEST_CODE);
-        }
-    }
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
@@ -132,7 +158,9 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         public void onReceive(Context context, Intent intent) {
             if (intent.getAction().equals(LocationManager.PROVIDERS_CHANGED_ACTION)) {
                 if (ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-                    checkLocationSettings();
+                    viewModel.checkLocationSettings(MapActivity.this);
+                } else {
+                    onLocationDeactivated();
                 }
             }
         }
@@ -142,7 +170,8 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     protected void onResume() {
         super.onResume();
         registerReceiver(locationProviderChangeReceiver, new IntentFilter(LocationManager.PROVIDERS_CHANGED_ACTION));
-        checkAndRequestPermissions();
+        viewModel.checkLocationSettings(this);
+        viewModel.checkAndRequestPermissions(this);
     }
 
     @Override
@@ -157,52 +186,21 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED &&
                 ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
             mMap.setMyLocationEnabled(true);
-            checkLocationSettings();
+            viewModel.checkLocationSettings(this);
         } else {
-            checkAndRequestPermissions();
+            viewModel.checkAndRequestPermissions(this);
         }
     }
 
+    // Cuando se active la ubicación, se habilita el Spinner:
+    public void onLocationActivated() {
+        distanceSpinner.setEnabled(true);
+        distanceSpinner.setAlpha(1.0f); // Esto hará que se vea "normal".
+    }
 
-    private void checkLocationSettings() {
-        LocationRequest locationRequest = LocationRequest.create();
-        locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
-
-        LocationSettingsRequest.Builder builder = new LocationSettingsRequest.Builder()
-                .addLocationRequest(locationRequest);
-
-        Task<LocationSettingsResponse> task = LocationServices.getSettingsClient(this)
-                .checkLocationSettings(builder.build());
-
-        task.addOnCompleteListener(new OnCompleteListener<LocationSettingsResponse>() {
-            @Override
-            public void onComplete(@NonNull Task<LocationSettingsResponse> task) {
-                try {
-                    LocationSettingsResponse response = task.getResult(ApiException.class);
-                    // All location settings are satisfied. The client can initialize location requests here.
-                    // Do nothing here, or add any other functionality you want
-                } catch (ApiException exception) {
-                    switch (exception.getStatusCode()) {
-                        case LocationSettingsStatusCodes.RESOLUTION_REQUIRED:
-                            // Location settings are not satisfied. But could be fixed by showing the user a dialog.
-                            try {
-                                // Cast to a resolvable exception.
-                                ResolvableApiException resolvable = (ResolvableApiException) exception;
-                                // Show the dialog by calling startResolutionForResult(),
-                                // and check the result in onActivityResult().
-                                resolvable.startResolutionForResult(
-                                        MapActivity.this,
-                                        REQUEST_CHECK_SETTINGS);
-                            } catch (IntentSender.SendIntentException | ClassCastException e) {
-                                // Ignore the error.
-                            }
-                            break;
-                        case LocationSettingsStatusCodes.SETTINGS_CHANGE_UNAVAILABLE:
-                            // Location settings are not satisfied. However, we have no way to fix the settings so we won't show the dialog.
-                            break;
-                    }
-                }
-            }
-        });
+    // Y cuando se desactive la ubicación, se deshabilita el Spinner:
+    public void onLocationDeactivated() {
+        distanceSpinner.setEnabled(false);
+        distanceSpinner.setAlpha(0.5f); // Esto hará que se vea más "oscuro" o "apagado".
     }
 }
