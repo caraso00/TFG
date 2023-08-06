@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/invisible"
+        android:enabled="false"
+        android:checkable="true"
+        android:visible="false"
+        android:title="" />
+    <item
+        android:id="@+id/navigation_back"
+        android:icon="@drawable/sesion"
+        android:title="Cerrar sesión" />
+</menu>
