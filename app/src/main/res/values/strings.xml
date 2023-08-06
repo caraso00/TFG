@@ -28,4 +28,9 @@
         <item>1 km</item>
         <item>5 km</item>
     </string-array>
+    <string-array name="type_options">
+        <item>Orgánico</item>
+        <item>Papel y cartón</item>
+        <item>Vidrio</item>
+    </string-array>
 </resources>

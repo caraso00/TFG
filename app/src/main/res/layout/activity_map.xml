@@ -39,6 +39,20 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/distance_filter_title" />
 
+    <MultiAutoCompleteTextView
+        android:id="@+id/multiSelectionDropdown"
+        android:layout_width="104dp"
+        android:layout_height="73dp"
+        android:layout_marginStart="15dp"
+        android:layout_marginTop="5dp"
+        android:cursorVisible="false"
+        android:hint="Tipo"
+        android:imeOptions="actionDone"
+        android:focusable="false"
+        android:focusableInTouchMode="false"
+        app:layout_constraintStart_toEndOf="@+id/spinner"
+        app:layout_constraintTop_toTopOf="parent" />
+
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/top_navigation"
         android:layout_width="90dp"

@@ -7,8 +7,10 @@ import androidx.lifecycle.ViewModelProvider;
 
 import android.Manifest;
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.IntentSender;
@@ -19,7 +21,10 @@ import android.os.Bundle;
 import android.os.Looper;
 import android.util.Log;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
+import android.widget.MultiAutoCompleteTextView;
 import android.widget.Spinner;
 import android.widget.Toast;
 
@@ -50,6 +55,8 @@ import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationBarView;
 
+import java.util.Arrays;
+
 public class MapActivity extends AppCompatActivity implements OnMapReadyCallback {
 
     private GoogleMap mMap;
@@ -58,7 +65,10 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     private MapActivityViewModel viewModel;
 
     private Spinner distanceSpinner;
-    private static final int LOCATION_PERMISSION_REQUEST_CODE = 1;
+    private MultiAutoCompleteTextView multiSelectionDropdown;
+    private MultiSelectArrayAdapter adapter;
+    private boolean[] selectedItems;
+    private final String[] items = {"Orgánico", "Papel y cartón", "Vidrio", "Papelera"};
 
     private static final int REQUEST_CHECK_SETTINGS = 2;
 
@@ -70,14 +80,15 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         // Inicializamos el ViewModel
         viewModel = new ViewModelProvider(this).get(MapActivityViewModel.class);
 
+        // Llamada al ViewModel para pedir permisos
+        viewModel.checkAndRequestPermissions(this);
+
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
 
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
 
-        // Llamada al ViewModel para pedir permisos
-        viewModel.checkAndRequestPermissions(this);
 
         BottomNavigationView navView = findViewById(R.id.navigation);
         navView.setSelectedItemId(R.id.navigation_home);
@@ -133,24 +144,20 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                 onLocationDeactivated();
             }
         });
-    }
 
+        selectedItems = new boolean[items.length];
+        Arrays.fill(selectedItems, false);
+        adapter = new MultiSelectArrayAdapter(this, android.R.layout.simple_list_item_multiple_choice, items);
+        multiSelectionDropdown = findViewById(R.id.multiSelectionDropdown);
+        multiSelectionDropdown.setAdapter(adapter);
+        multiSelectionDropdown.setTokenizer(new MultiAutoCompleteTextView.CommaTokenizer());
 
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if (requestCode == LOCATION_PERMISSION_REQUEST_CODE) {
-            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
-                        ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                    return;
-                }
-                // enable location layer if permission granted
-                if (mMap != null) {
-                    mMap.setMyLocationEnabled(true);
-                }
+        multiSelectionDropdown.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showMultiChoiceDialog();
             }
-        }
+        });
     }
 
     private BroadcastReceiver locationProviderChangeReceiver = new BroadcastReceiver() {
@@ -202,5 +209,62 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     public void onLocationDeactivated() {
         distanceSpinner.setEnabled(false);
         distanceSpinner.setAlpha(0.5f); // Esto hará que se vea más "oscuro" o "apagado".
+    }
+
+    private void showMultiChoiceDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Elija los tipos:");
+
+        builder.setMultiChoiceItems(items, selectedItems, new DialogInterface.OnMultiChoiceClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which, boolean isChecked) {
+                selectedItems[which] = isChecked; // Aquí actualizamos los ítems seleccionados
+            }
+        });
+
+        builder.setPositiveButton("Aceptar", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                String selections = "";
+                int countSelected = 0;
+                int lastIndex = -1;
+                for (int i = 0; i < items.length; i++) {
+                    if (selectedItems[i]) {
+                        countSelected++;
+                        lastIndex = i;
+                    }
+                }
+
+                if (countSelected == 0) {
+                    selections = "";
+                } else if (countSelected == 1) {
+                    selections = items[lastIndex];
+                } else {
+                    selections = "Varios";
+                }
+                multiSelectionDropdown.setText(selections);
+            }
+        });
+
+        builder.setNegativeButton("Cancelar", null);
+
+        builder.show();
+    }
+
+    private void updateDropdownText() {
+        StringBuilder selectedItems = new StringBuilder();
+        boolean[] checkedPositions = adapter.getCheckedItemPositions();
+        for (int i = 0; i < checkedPositions.length; i++) {
+            if (checkedPositions[i]) {
+                selectedItems.append(adapter.getItem(i)).append(", ");
+            }
+        }
+
+        // Remove the last comma and space
+        if (selectedItems.length() > 2) {
+            selectedItems.setLength(selectedItems.length() - 2);
+        }
+
+        multiSelectionDropdown.setText(selectedItems.toString());
     }
 }
