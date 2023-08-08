@@ -26,7 +26,6 @@ public class RegisterActivity extends AppCompatActivity {
         setContentView(R.layout.register);
 
         registerViewModel = new ViewModelProvider(this, new RegisterViewModelFactory()).get(RegisterViewModel.class);
-
         editTextUsername = findViewById(R.id.editTextUsername);
         editTextEmail = findViewById(R.id.editTextEmail);
         editTextPassword = findViewById(R.id.editTextPassword);
@@ -53,8 +52,11 @@ public class RegisterActivity extends AppCompatActivity {
 
             if(registrationFormState.isDataValid()) {
                 // User registration logic here (save the user data to your database)
-                Toast.makeText(RegisterActivity.this, "User registered!", Toast.LENGTH_SHORT).show();
-                finish(); // return to login screen
+                Toast.makeText(RegisterActivity.this, "Usuario registrado!", Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(RegisterActivity.this, LoginActivity.class);
+                startActivity(intent);
+                overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+                finish();
             }
         });
 

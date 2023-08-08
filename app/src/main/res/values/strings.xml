@@ -15,13 +15,13 @@
     <string name="action_sign_in">Sign in or register</string>
     <string name="action_sign_in_short">Sign in</string>
     <string name="welcome">"Welcome !"</string>
-    <string name="invalid_username">Not a valid username</string>
-    <string name="invalid_password">Password must be >5 characters</string>
+    <string name="invalid_username">El usuario debe tener mas de 5 carácteres</string>
+    <string name="invalid_password">La contraseña tiene que ser de mas de 5 carácteres</string>
     <string name="login_failed">"Login failed"</string>
     <string name="title_activity_register">Register</string>
-    <string name="invalid_email">Invalid email</string>
-    <string name="invalid_password_register">Invalid password</string>
-    <string name="passwords_not_matching">Passwords do not match</string>
+    <string name="invalid_email">Email inválido, ej: hello@gmail.com</string>
+    <string name="invalid_password_register">La contraseña tiene que ser de mas de 5 carácteres</string>
+    <string name="passwords_not_matching">Las contraseñas no coinciden</string>
     <string-array name="distance_options">
         <item>100 m</item>
         <item>500 m</item>
@@ -33,4 +33,11 @@
         <item>Papel y cartón</item>
         <item>Vidrio</item>
     </string-array>
+    <string-array name="status_options">
+        <item>Perfecto</item>
+        <item>Bien</item>
+        <item>Sucio</item>
+        <item>Mal</item>
+    </string-array>
+    <string name="description_add_photo">Añadir foto</string>
 </resources>
