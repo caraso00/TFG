@@ -30,6 +30,8 @@ import android.widget.Toast;
 
 import com.example.tfg.R;
 import com.example.tfg.register.RegisterActivity;
+import com.example.tfg.reportAdd.ReportActivity;
+import com.example.tfg.reportAdd.SelectLocationActivity;
 import com.example.tfg.ui.login.LoginActivity;
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.common.api.ResolvableApiException;
@@ -99,7 +101,10 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                 if (id == R.id.navigation_home) {
                     return true;
                 } else if (id == R.id.navigation_add) {
-                    return true;
+                    Intent intent = new Intent(MapActivity.this, ReportActivity.class);
+                    startActivity(intent);
+                    overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+                    finish();
                 } else if (id == R.id.navigation_avatar) {
                     return true;
                 }
@@ -127,6 +132,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
 
         // Inicializar Spinner
         distanceSpinner = findViewById(R.id.spinner);
+
         // Observamos el LiveData para la configuración de ubicación
         viewModel.getLocationSettingResponse().observe(this, isLocationSettingSatisfied -> {
             if (Boolean.TRUE.equals(isLocationSettingSatisfied)) {

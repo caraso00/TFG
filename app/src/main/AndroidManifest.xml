@@ -2,9 +2,15 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
+    <uses-feature
+        android:name="android.hardware.camera"
+        android:required="false" />
+
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
 
     <application
         android:allowBackup="true"
@@ -16,15 +22,16 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.TFG"
         tools:targetApi="31">
-        <activity
-            android:name=".map.MapActivity"
-            android:exported="false"
-            android:label="MapActivity"
-            android:screenOrientation="portrait" />
 
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyBT3BkCpwiTinLqos5gesu8yKKwCTxe2Go" />
+
+        <activity
+            android:name=".map.MapActivity"
+            android:exported="true"
+            android:label="MapActivity"
+            android:screenOrientation="portrait" />
 
         <activity
             android:name=".register.RegisterActivity"
@@ -32,6 +39,19 @@
             android:label="RegisterActivity"
             android:theme="@style/Theme.TFG"
             android:screenOrientation="portrait" />
+
+        <activity
+            android:name=".reportAdd.ReportActivity"
+            android:label="ReportActivity"
+            android:exported="true"
+            android:screenOrientation="portrait" />
+
+        <activity
+            android:name=".reportAdd.SelectLocationActivity"
+            android:label="SelectLocationActivity"
+            android:exported="true"
+            android:screenOrientation="portrait" />
+
         <activity
             android:name=".ui.login.LoginActivity"
             android:exported="true"
@@ -41,6 +61,7 @@
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+
         </activity>
     </application>
 
