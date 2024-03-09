@@ -39,5 +39,11 @@
         <item>Sucio</item>
         <item>Mal</item>
     </string-array>
+    <string-array name="motivo_options">
+        <item>Cambiar tipo</item>
+        <item>Cambiar estado</item>
+        <item>Ubicación erronea</item>
+        <item>Eliminar</item>
+    </string-array>
     <string name="description_add_photo">Añadir foto</string>
 </resources>
