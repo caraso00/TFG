@@ -47,7 +47,6 @@ public class ReportActivity extends AppCompatActivity {
     private Spinner statusSpinner;
     private ImageView addPhotoImageView;
     private Button acceptButton;
-    private Button cancelButton;
 
     private Pair<Double, Double> selectedLocation = null;
     private Uri selectedImageUri = null;
@@ -69,7 +68,6 @@ public class ReportActivity extends AppCompatActivity {
         statusSpinner = findViewById(R.id.estadoSpinner);
         addPhotoImageView = findViewById(R.id.imageViewer);
         acceptButton = findViewById(R.id.aceptarButton);
-        cancelButton = findViewById(R.id.cancelarButton);
 
         BottomNavigationView navView = findViewById(R.id.navigation);
         navView.setSelectedItemId(R.id.navigation_add);
@@ -138,14 +136,6 @@ public class ReportActivity extends AppCompatActivity {
                 } else {
                     Toast.makeText(ReportActivity.this, "Por favor, completa todos los campos.", Toast.LENGTH_SHORT).show();
                 }
-            }
-        });
-
-        cancelButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(ReportActivity.this, MapActivity.class);
-                startActivity(intent);
             }
         });
 
