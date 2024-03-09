@@ -122,15 +122,15 @@
 
     <TextView
         android:id="@+id/commentsText"
-        android:layout_width="345dp"
-        android:layout_height="67dp"
+        android:layout_width="348dp"
+        android:layout_height="86dp"
         android:background="@drawable/border_background"
         android:breakStrategy="high_quality"
         android:padding="10dp"
         android:text="Comentarios"
         android:textColor="#8A8585"
         tools:layout_editor_absoluteX="33dp"
-        tools:layout_editor_absoluteY="505dp" />
+        tools:layout_editor_absoluteY="486dp" />
 
     <TextView
         android:id="@+id/obligatorio"
