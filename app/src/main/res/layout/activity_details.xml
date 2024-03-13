@@ -21,7 +21,7 @@
         app:layout_constraintTop_toBottomOf="@+id/selectLocationButton" />
 
     <TextView
-        android:id="@+id/estadoContenedor"
+        android:id="@+id/tipoSpinnerTitle"
         android:layout_width="192dp"
         android:layout_height="37dp"
         android:layout_marginTop="16dp"
@@ -35,7 +35,7 @@
         app:layout_constraintTop_toBottomOf="@+id/selectLocationButton" />
 
     <TextView
-        android:id="@+id/estadoContenedor"
+        android:id="@+id/tipoContenedor"
         android:layout_width="192dp"
         android:layout_height="37dp"
         android:layout_marginTop="60dp"
@@ -91,6 +91,7 @@
         android:layout_width="35dp"
         android:layout_height="35dp"
         android:layout_marginTop="27dp"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/back" />
 
@@ -155,8 +156,10 @@
         android:id="@+id/textView"
         android:layout_width="389dp"
         android:layout_height="147dp"
+        android:layout_marginStart="6dp"
+        android:layout_marginBottom="21dp"
         android:text="*VALORACIONES*"
-        tools:layout_editor_absoluteX="6dp"
-        tools:layout_editor_absoluteY="433dp" />
+        app:layout_constraintBottom_toTopOf="@+id/aceptarButton"
+        app:layout_constraintStart_toStartOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

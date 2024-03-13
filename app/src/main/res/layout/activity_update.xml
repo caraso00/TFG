@@ -35,6 +35,7 @@
         android:layout_width="35dp"
         android:layout_height="35dp"
         android:layout_marginTop="27dp"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/back" />
 
@@ -124,24 +125,29 @@
         android:id="@+id/commentsText"
         android:layout_width="348dp"
         android:layout_height="86dp"
+        android:layout_marginStart="30dp"
+        android:layout_marginEnd="30dp"
+        android:layout_marginBottom="18dp"
         android:background="@drawable/border_background"
         android:breakStrategy="high_quality"
         android:padding="10dp"
         android:text="Comentarios"
         android:textColor="#8A8585"
-        tools:layout_editor_absoluteX="33dp"
-        tools:layout_editor_absoluteY="486dp" />
+        app:layout_constraintBottom_toTopOf="@+id/aceptarButton"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
 
     <TextView
         android:id="@+id/obligatorio"
         android:layout_width="85dp"
         android:layout_height="19dp"
+        android:layout_marginStart="44dp"
         android:layout_marginTop="1dp"
         android:text="Obligatorio"
         android:textColor="#8A8585"
         android:textSize="10sp"
         android:textStyle="italic"
-        app:layout_constraintTop_toBottomOf="@+id/commentsText"
-        tools:layout_editor_absoluteX="44dp" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/commentsText" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
