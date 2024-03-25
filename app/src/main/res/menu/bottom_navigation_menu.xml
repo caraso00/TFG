@@ -9,7 +9,7 @@
         android:icon="@drawable/add_circle"
         android:title="Añadir contenedor" />
     <item
-        android:id="@+id/navigation_avatar"
+        android:id="@+id/navigation_profile"
         android:icon="@drawable/profile"
         android:title="Perfil" />
 </menu>

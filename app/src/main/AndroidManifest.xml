@@ -28,9 +28,22 @@
             android:value="AIzaSyBT3BkCpwiTinLqos5gesu8yKKwCTxe2Go" />
 
         <activity
+            android:name=".points.PointsActivity"
+            android:exported="true"
+            android:label="PointsActivity"
+            android:screenOrientation="portrait" />
+
+        <activity
+            android:name=".profile.ProfileActivity"
+            android:exported="true"
+            android:label="ProfileActivity"
+            android:screenOrientation="portrait" />
+
+        <activity
             android:name=".map.MapActivity"
             android:exported="true"
             android:label="MapActivity"
+            android:theme="@style/Theme.TFG"
             android:screenOrientation="portrait" />
 
         <activity
@@ -55,8 +68,9 @@
         <activity
             android:name=".ui.login.LoginActivity"
             android:exported="true"
-            android:label="LoginActivity"
+            android:label="Mr. Bin"
             android:screenOrientation="portrait" >
+
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />

@@ -4,18 +4,19 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:textAlignment="center">
+    android:textAlignment="center"
+    android:background="#FFFFFF">
 
     <ImageView
         android:id="@+id/imageViewer"
         android:layout_width="122dp"
         android:layout_height="85dp"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="12dp"
+        android:layout_marginTop="15dp"
         android:clickable="true"
         android:contentDescription="@string/description_add_photo"
         android:focusable="true"
-        android:src="@drawable/Captura2"
+        android:src="@drawable/captura2"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.056"
         app:layout_constraintStart_toStartOf="parent"
@@ -65,7 +66,7 @@
         android:id="@+id/userNameTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="24dp"
+        android:layout_marginStart="15dp"
         android:layout_marginTop="4dp"
         android:text="Oscar Fernandez"
         android:textColor="#000000"
@@ -74,14 +75,14 @@
         app:layout_constraintTop_toBottomOf="@+id/imageViewer" />
 
     <ImageView
-        android:id="@+id/imageView"
+        android:id="@+id/pointsView"
         android:layout_width="94dp"
         android:layout_height="79dp"
-        android:layout_marginTop="12dp"
+        android:layout_marginTop="15dp"
         android:layout_marginEnd="48dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/navigationView2"
-        app:srcCompat="@drawable/Puntos" />
+        app:srcCompat="@drawable/puntos" />
 
     <TextView
         android:id="@+id/pointsTextView"
@@ -94,16 +95,18 @@
         android:textColor="#8A7D7D"
         android:textSize="16sp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/imageView" />
+        app:layout_constraintTop_toBottomOf="@+id/pointsView" />
 
     <com.google.android.material.navigation.NavigationView
         android:id="@+id/background"
-        android:layout_width="455dp"
-        android:layout_height="347dp"
+        android:layout_width="459dp"
+        android:layout_height="407dp"
+        android:layout_marginTop="120dp"
         android:background="#BAB9B9"
-        app:layout_constraintBottom_toTopOf="@+id/navigation"
+        app:layout_constraintBottom_toBottomOf="@+id/navigation"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent">
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/navigationView2">
 
     </com.google.android.material.navigation.NavigationView>
 
@@ -111,33 +114,43 @@
         android:id="@+id/contedoresCreadosTextView"
         android:layout_width="138dp"
         android:layout_height="50dp"
+        android:layout_marginTop="5dp"
+        android:layout_marginBottom="-25dp"
         android:background="@drawable/border"
         android:text="Default"
         android:textAlignment="center"
         android:textColor="#8A7D7D"
         app:layout_constraintBottom_toTopOf="@+id/background"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/userNameTextView" />
+
+    <TextView
+        android:id="@+id/contenedoresModificadosTextView"
+        android:layout_width="138dp"
+        android:layout_height="50dp"
+        android:layout_marginTop="5dp"
+        android:layout_marginBottom="-25dp"
+        android:background="@drawable/border"
+        android:text="Default"
+        android:textAlignment="center"
+        android:textColor="#8A7D7D"
+        app:layout_constraintBottom_toTopOf="@+id/background"
+        app:layout_constraintEnd_toStartOf="@+id/valoracionesTextView"
+        app:layout_constraintStart_toEndOf="@+id/contedoresCreadosTextView"
+        app:layout_constraintTop_toBottomOf="@+id/userNameTextView" />
 
     <TextView
         android:id="@+id/valoracionesTextView"
         android:layout_width="138dp"
         android:layout_height="50dp"
+        android:layout_marginTop="5dp"
+        android:layout_marginBottom="-25dp"
         android:background="@drawable/border"
         android:text="Default"
         android:textAlignment="center"
         android:textColor="#8A7D7D"
         app:layout_constraintBottom_toTopOf="@+id/background"
-        app:layout_constraintEnd_toEndOf="parent" />
-
-    <TextView
-        android:id="@+id/contenedoresModificadosTextView"
-        android:layout_width="140dp"
-        android:layout_height="50dp"
-        android:background="@drawable/border"
-        android:text="Default"
-        android:textAlignment="center"
-        android:textColor="#8A7D7D"
-        app:layout_constraintBottom_toTopOf="@+id/background"
-        app:layout_constraintEnd_toStartOf="@+id/valoracionesTextView" />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/userNameTextView" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

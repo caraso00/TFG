@@ -3,18 +3,20 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:textAlignment="center"
+    android:background="#FFFFFF">
 
     <com.google.android.material.navigation.NavigationView
         android:id="@+id/background"
-        android:layout_width="448dp"
-        android:layout_height="236dp"
-        android:layout_marginBottom="128dp"
+        android:layout_width="506dp"
+        android:layout_height="294dp"
+        android:layout_marginBottom="190dp"
         android:background="#BAB9B9"
-        app:layout_constraintBottom_toTopOf="@+id/navigation"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.513"
-        app:layout_constraintStart_toStartOf="parent">
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/cercaDeTi">
 
     </com.google.android.material.navigation.NavigationView>
 
@@ -23,20 +25,22 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="100dp"
+        android:layout_marginTop="5dp"
         android:layout_marginEnd="100dp"
-        android:layout_marginBottom="10dp"
+        android:layout_marginBottom="-15dp"
         android:text="Cerca de ti"
         android:textColor="#8A7D7D"
         android:textSize="16sp"
         app:layout_constraintBottom_toTopOf="@+id/background"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/selectLocationButton" />
 
     <Button
         android:id="@+id/selectLocationButton"
         android:layout_width="288dp"
         android:layout_height="52dp"
-        android:layout_marginTop="112dp"
+        android:layout_marginTop="115dp"
         android:text="Seleccionar Ubicación"
         app:layout_constraintHorizontal_bias="0.495"
         app:layout_constraintLeft_toLeftOf="parent"
@@ -55,7 +59,7 @@
     </com.google.android.material.navigation.NavigationView>
 
     <ImageView
-        android:id="@+id/backImage"
+        android:id="@+id/backView"
         android:layout_width="35dp"
         android:layout_height="35dp"
         android:layout_marginTop="27dp"
@@ -104,20 +108,25 @@
         android:layout_marginStart="123dp"
         android:layout_marginTop="5dp"
         android:layout_marginEnd="124dp"
+        android:indeterminateBehavior="repeat"
         android:indeterminateOnly="false"
+        android:progress="40"
+        android:progressTint="@android:color/black"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/pointsTextView" />
 
     <TextView
         android:id="@+id/pointsTextView"
-        android:layout_width="162dp"
+        android:layout_width="163dp"
         android:layout_height="20dp"
         android:layout_marginStart="123dp"
         android:layout_marginTop="20dp"
+        android:layout_marginEnd="126dp"
         android:text="Default"
         android:textAlignment="center"
         android:textSize="16sp"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/navigationView2" />
 
@@ -141,7 +150,7 @@
         android:layout_width="132dp"
         android:layout_height="43dp"
         android:layout_marginStart="5dp"
-        android:layout_marginBottom="32dp"
+        android:layout_marginBottom="25dp"
         app:layout_constraintBottom_toTopOf="@+id/navigation"
         app:layout_constraintStart_toStartOf="parent"
         app:srcCompat="@drawable/amazon" />
@@ -151,7 +160,7 @@
         android:layout_width="132dp"
         android:layout_height="43dp"
         android:layout_marginEnd="1dp"
-        android:layout_marginBottom="32dp"
+        android:layout_marginBottom="25dp"
         app:layout_constraintBottom_toTopOf="@+id/navigation"
         app:layout_constraintEnd_toStartOf="@+id/imageView4"
         app:layout_constraintStart_toEndOf="@+id/imageView2"
@@ -162,7 +171,7 @@
         android:layout_width="140dp"
         android:layout_height="45dp"
         android:layout_marginEnd="5dp"
-        android:layout_marginBottom="32dp"
+        android:layout_marginBottom="25dp"
         app:layout_constraintBottom_toTopOf="@+id/navigation"
         app:layout_constraintEnd_toEndOf="parent"
         app:srcCompat="@drawable/paypal" />
