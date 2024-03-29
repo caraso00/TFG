@@ -8,7 +8,7 @@
     android:background="#FFFFFF">
 
     <ImageView
-        android:id="@+id/imageViewer"
+        android:id="@+id/reportImage"
         android:layout_width="122dp"
         android:layout_height="85dp"
         android:layout_marginStart="8dp"
@@ -72,7 +72,7 @@
         android:textColor="#000000"
         android:textSize="20sp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/imageViewer" />
+        app:layout_constraintTop_toBottomOf="@+id/reportImage" />
 
     <ImageView
         android:id="@+id/pointsView"

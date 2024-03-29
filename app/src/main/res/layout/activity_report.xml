@@ -4,20 +4,26 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#FFFFFF">
+    android:background="#FFFFFF"
+    tools:ignore="MissingDefaultResource">
 
-    <ImageView
-        android:id="@+id/imageViewer"
-        android:layout_width="295dp"
-        android:layout_height="144dp"
-        android:layout_marginTop="20dp"
-        android:clickable="true"
-        android:contentDescription="@string/description_add_photo"
-        android:focusable="true"
-        android:src="@drawable/asgasgka0psigasg"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/navigationView2" />
+    <ScrollView
+        android:layout_width="409dp"
+        android:layout_height="215dp"
+        android:layout_weight="1"
+        app:layout_constraintBottom_toTopOf="@+id/selectLocationButton"
+        app:layout_constraintTop_toBottomOf="@+id/navigationView2"
+        tools:layout_editor_absoluteX="2dp">
+
+        <LinearLayout
+            android:id="@+id/imageContainer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+            <!-- Los ImageView seleccionados se agregarán dinámicamente aquí -->
+        </LinearLayout>
+
+    </ScrollView>
 
     <com.google.android.material.navigation.NavigationView
         android:id="@+id/navigationView2"
@@ -25,8 +31,8 @@
         android:layout_height="111dp"
         android:background="#000000"
         app:layout_constraintTop_toTopOf="parent"
-        tools:layout_editor_absoluteX="0dp"
-        tools:ignore="MissingConstraints" />
+        tools:ignore="MissingConstraints"
+        tools:layout_editor_absoluteX="0dp" />
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/navigation"
@@ -65,9 +71,9 @@
 
     <Button
         android:id="@+id/selectLocationButton"
-        android:layout_width="288dp"
-        android:layout_height="52dp"
-        android:layout_marginTop="252dp"
+        android:layout_width="225dp"
+        android:layout_height="38dp"
+        android:layout_marginTop="250dp"
         android:text="Seleccionar Ubicación"
         app:layout_constraintHorizontal_bias="0.495"
         app:layout_constraintLeft_toLeftOf="parent"
@@ -78,7 +84,7 @@
         android:id="@+id/estadoSpinnerTitle"
         android:layout_width="200dp"
         android:layout_height="35dp"
-        android:layout_marginTop="64dp"
+        android:layout_marginTop="65dp"
         android:text="Estado:"
         android:textAlignment="center"
         android:textColor="#000000"
@@ -86,7 +92,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.938"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/selectLocationButton" />
+        app:layout_constraintTop_toBottomOf="@+id/ubiReportTextView" />
 
     <Spinner
         android:id="@+id/estadoSpinner"
@@ -114,7 +120,7 @@
         android:id="@+id/estadoContenedor"
         android:layout_width="192dp"
         android:layout_height="37dp"
-        android:layout_marginTop="64dp"
+        android:layout_marginTop="65dp"
         android:text="Tipo:"
         android:textAlignment="center"
         android:textColor="#000000"
@@ -122,17 +128,33 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.013"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/selectLocationButton" />
+        app:layout_constraintTop_toBottomOf="@+id/ubiReportTextView" />
 
     <Button
         android:id="@+id/aceptarButton"
         android:layout_width="323dp"
         android:layout_height="46dp"
         android:layout_marginLeft="44dp"
-        android:layout_marginTop="500dp"
+        android:layout_marginTop="515dp"
         android:text="Enviar solicitud"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/navigationView2"
+        tools:ignore="MissingConstraints" />
+
+    <TextView
+        android:id="@+id/ubiReportTextView"
+        android:layout_width="373dp"
+        android:layout_height="24dp"
+        android:layout_marginStart="4dp"
+        android:layout_marginTop="5dp"
+        android:layout_marginEnd="4dp"
+        android:text="Ubicación"
+        android:textAlignment="center"
+        android:textColor="#000000"
+        android:textSize="20sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/selectLocationButton"
         tools:ignore="MissingConstraints" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -203,10 +203,29 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED &&
                 ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
             mMap.setMyLocationEnabled(true);
+            getDeviceLocation();
             viewModel.checkLocationSettings(this);
         } else {
             viewModel.checkAndRequestPermissions(this);
         }
+    }
+
+    private void getDeviceLocation() {
+        FusedLocationProviderClient fusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
+
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            return;
+        }
+
+        fusedLocationClient.getLastLocation().addOnSuccessListener(new OnSuccessListener<Location>() {
+            @Override
+            public void onSuccess(Location location) {
+                if (location != null && mMap != null) {
+                    LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
+                    mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 19f)); // Zoom de 15 (puedes ajustarlo según sea necesario)
+                }
+            }
+        });
     }
 
     // Cuando se active la ubicación, se habilita el Spinner:

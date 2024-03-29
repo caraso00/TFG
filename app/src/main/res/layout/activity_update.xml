@@ -18,7 +18,7 @@
     </com.google.android.material.navigation.NavigationView>
 
     <ImageView
-        android:id="@+id/imageViewer"
+        android:id="@+id/reportImage"
         android:layout_width="295dp"
         android:layout_height="144dp"
         android:layout_marginTop="20dp"
