@@ -31,6 +31,7 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.example.tfg.R;
 import com.example.tfg.map.MapActivity;
+import com.example.tfg.profile.ProfileActivity;
 import com.example.tfg.ui.login.LoginActivity;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationBarView;
@@ -82,8 +83,11 @@ public class ReportActivity extends AppCompatActivity {
                     finish();
                 } else if (id == R.id.navigation_add) {
                     return true;
-                } else if (id == R.id.navigation_avatar) {
-                    return true;
+                } else if (id == R.id.navigation_profile) {
+                    Intent intent = new Intent(ReportActivity.this, ProfileActivity.class);
+                    startActivity(intent);
+                    overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+                    finish();
                 }
                 return false;
             }

@@ -29,6 +29,7 @@ import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.example.tfg.R;
+import com.example.tfg.profile.ProfileActivity;
 import com.example.tfg.register.RegisterActivity;
 import com.example.tfg.reportAdd.ReportActivity;
 import com.example.tfg.reportAdd.SelectLocationActivity;
@@ -105,8 +106,11 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                     startActivity(intent);
                     overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
                     finish();
-                } else if (id == R.id.navigation_avatar) {
-                    return true;
+                } else if (id == R.id.navigation_profile) {
+                    Intent intent = new Intent(MapActivity.this, ProfileActivity.class);
+                    startActivity(intent);
+                    overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+                    finish();
                 }
                 return false;
             }
