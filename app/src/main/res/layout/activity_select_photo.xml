@@ -39,26 +39,28 @@
     </com.google.android.material.navigation.NavigationView>
 
     <!-- Contenedor para las imágenes seleccionadas -->
+
+    <!-- Botones para abrir la cámara y la galería -->
+
     <ScrollView
+        android:id="@+id/scrollView"
         android:layout_width="match_parent"
-        android:layout_height="540dp"
+        android:layout_height="wrap_content"
         android:layout_above="@+id/buttonContainer"
         android:layout_below="@+id/navigationView2"
         android:layout_marginTop="0dp"
-        android:layout_marginBottom="0dp">
+        android:layout_marginBottom="-1dp">
 
         <LinearLayout
             android:id="@+id/imageContainer"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="200dp"
             android:orientation="vertical"
-            android:padding="8dp" >
+            android:padding="8dp">
 
         </LinearLayout>
-
     </ScrollView>
 
-    <!-- Botones para abrir la cámara y la galería -->
     <LinearLayout
         android:id="@+id/buttonContainer"
         android:layout_width="match_parent"

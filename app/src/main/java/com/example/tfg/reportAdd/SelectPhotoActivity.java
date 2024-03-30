@@ -16,6 +16,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ScrollView;
 import android.widget.Toast;
 
 import androidx.activity.result.ActivityResultLauncher;
@@ -28,6 +29,8 @@ import androidx.core.content.ContextCompat;
 import androidx.core.content.FileProvider;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 import com.example.tfg.R;
 import com.example.tfg.points.PointsActivity;
 import com.example.tfg.profile.ProfileActivity;
@@ -49,6 +52,7 @@ public class SelectPhotoActivity extends AppCompatActivity {
     private Button saveButton;
     private String currentPhotoPath;
     private LinearLayout imageContainer;
+    private ScrollView scrollView;
     private ImageView backView;
 
     @Override
@@ -62,6 +66,7 @@ public class SelectPhotoActivity extends AppCompatActivity {
         saveButton = findViewById(R.id.saveButton);
         imageContainer = findViewById(R.id.imageContainer);
         backView = findViewById(R.id.backPhotoView);
+        scrollView = findViewById(R.id.scrollView);
 
         cameraButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -228,9 +233,23 @@ public class SelectPhotoActivity extends AppCompatActivity {
     );
 
     private void addPhotoToContainer(Uri selectedImageUri) {
-        // Crear ImageView y establecer la imagen
+        // Crear ImageView
         ImageView imageView = new ImageView(SelectPhotoActivity.this);
-        imageView.setImageURI(selectedImageUri);
+
+        // Obtener dimensiones del contenedor de imágenes
+        int containerWidth = scrollView.getWidth();
+        int containerHeight = scrollView.getHeight();
+
+        // Configurar opciones de carga de Glide
+        RequestOptions options = new RequestOptions()
+                .override(containerWidth, containerHeight) // Ajustar tamaño
+                .centerCrop(); // Centrar la imagen
+
+        // Cargar la imagen utilizando Glide
+        Glide.with(this)
+                .load(selectedImageUri)
+                .apply(options)
+                .into(imageView);
 
         // Configurar parámetros de diseño del ImageView
         LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(
@@ -240,15 +259,15 @@ public class SelectPhotoActivity extends AppCompatActivity {
         layoutParams.setMargins(1, 1, 1, 1); // Establecer márgenes entre imágenes
         imageView.setLayoutParams(layoutParams);
 
+        // Agregar OnClickListener para eliminar la imagen cuando se hace clic en ella
         imageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // Eliminar la imagen cuando se haga clic en ella
                 deletePhotoFromContainer(v);
             }
         });
 
-        // Añadir ImageView al contenedor de imágenes
+        // Agregar ImageView al contenedor de imágenes
         imageContainer.addView(imageView, 0); // Agregar ImageView al diseño
     }
 
