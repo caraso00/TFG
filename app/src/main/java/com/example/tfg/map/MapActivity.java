@@ -6,7 +6,6 @@ import androidx.core.app.ActivityCompat;
 import androidx.lifecycle.ViewModelProvider;
 
 import android.Manifest;
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -18,43 +17,23 @@ import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationManager;
 import android.os.Bundle;
-import android.os.Looper;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.ArrayAdapter;
-import android.widget.AutoCompleteTextView;
 import android.widget.MultiAutoCompleteTextView;
 import android.widget.Spinner;
-import android.widget.Toast;
 
 import com.example.tfg.R;
 import com.example.tfg.profile.ProfileActivity;
-import com.example.tfg.register.RegisterActivity;
 import com.example.tfg.reportAdd.ReportActivity;
-import com.example.tfg.reportAdd.SelectLocationActivity;
 import com.example.tfg.ui.login.LoginActivity;
-import com.google.android.gms.common.api.ApiException;
-import com.google.android.gms.common.api.ResolvableApiException;
 import com.google.android.gms.location.FusedLocationProviderClient;
-import com.google.android.gms.location.LocationCallback;
-import com.google.android.gms.location.LocationRequest;
-import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
-import com.google.android.gms.location.LocationSettingsRequest;
-import com.google.android.gms.location.LocationSettingsResponse;
-import com.google.android.gms.location.LocationSettingsStatusCodes;
-import com.google.android.gms.location.SettingsClient;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.MarkerOptions;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationBarView;
 
@@ -116,19 +95,15 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
             }
         });
 
-        BottomNavigationView top_navView = findViewById(R.id.top_navigation);
-        top_navView.setSelectedItemId(R.id.invisible);
+        BottomNavigationView logout = findViewById(R.id.logout);
+        logout.setSelectedItemId(R.id.invisible);
 
-        top_navView.setOnItemSelectedListener(new NavigationBarView.OnItemSelectedListener() {
+        logout.setOnItemSelectedListener(new NavigationBarView.OnItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                 int id = item.getItemId();
                 if (id == R.id.navigation_back) {
-                    Intent intent = new Intent(MapActivity.this, LoginActivity.class);
-                    startActivity(intent);
-
-                    finish();
-                    overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+                    showLogoutConfirmationDialog(); // Mostrar el diálogo de confirmación antes de realizar el logout
                 }
                 return false;
             }
@@ -280,20 +255,26 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         builder.show();
     }
 
-    private void updateDropdownText() {
-        StringBuilder selectedItems = new StringBuilder();
-        boolean[] checkedPositions = adapter.getCheckedItemPositions();
-        for (int i = 0; i < checkedPositions.length; i++) {
-            if (checkedPositions[i]) {
-                selectedItems.append(adapter.getItem(i)).append(", ");
-            }
-        }
-
-        // Remove the last comma and space
-        if (selectedItems.length() > 2) {
-            selectedItems.setLength(selectedItems.length() - 2);
-        }
-
-        multiSelectionDropdown.setText(selectedItems.toString());
+    private void showLogoutConfirmationDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(MapActivity.this);
+        builder.setMessage("¿Estás seguro de que deseas cerrar sesión?")
+                .setCancelable(false)
+                .setPositiveButton("Sí", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        // Si el usuario hace clic en Sí, realiza el logout y cierra la sesión
+                        Intent intent = new Intent(MapActivity.this, LoginActivity.class);
+                        startActivity(intent);
+                        finish();
+                        overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+                    }
+                })
+                .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        // Si el usuario hace clic en No, cancela la acción y cierra el diálogo
+                        dialog.cancel();
+                    }
+                });
+        AlertDialog alert = builder.create();
+        alert.show();
     }
 }
