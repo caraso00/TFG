@@ -51,6 +51,32 @@ public class LoginViewModel extends ViewModel {
         }
     }
 
+    public boolean loginAdmin(String username, String password) {
+        // can be launched in a separate asynchronous job
+        Result<LoggedInUser> result = loginRepository.login(username, password);
+
+        if (username.equals("admin") && password.equals("123456")) {
+            toastMessage.setValue("Bienvenido, " + username);
+            return true;
+        } else {
+            toastMessage.setValue("Credenciales incorrectas");
+            return false;
+        }
+    }
+
+    public boolean loginPersonal(String username, String password) {
+        // can be launched in a separate asynchronous job
+        Result<LoggedInUser> result = loginRepository.login(username, password);
+
+        if (username.equals("tester") && password.equals("123456")) {
+            toastMessage.setValue("Bienvenido, " + username);
+            return true;
+        } else {
+            toastMessage.setValue("Credenciales incorrectas");
+            return false;
+        }
+    }
+
     public void loginDataChanged(String username, String password) {
         if (!isUserNameValid(username)) {
             loginFormState.setValue(new LoginFormState(R.string.invalid_username, null));

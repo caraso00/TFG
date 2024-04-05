@@ -37,12 +37,12 @@ public class ProfileActivity extends AppCompatActivity {
                 if (id == R.id.navigation_home) {
                     Intent intent = new Intent(ProfileActivity.this, MapActivity.class);
                     startActivity(intent);
-                    overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+                    overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
                     finish();
                 } else if (id == R.id.navigation_add) {
                     Intent intent = new Intent(ProfileActivity.this, ReportActivity.class);
                     startActivity(intent);
-                    overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+                    overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
                     finish();
                 } else if (id == R.id.navigation_profile) {
                     return true;
@@ -56,7 +56,7 @@ public class ProfileActivity extends AppCompatActivity {
             public void onClick(View view) {
                 Intent intent = new Intent(ProfileActivity.this, PointsActivity.class);
                 startActivity(intent);
-                overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+                overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
                 finish();
             }
         });
