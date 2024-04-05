@@ -71,14 +71,14 @@ public class ReportActivity extends AppCompatActivity {
                 if (id == R.id.navigation_home) {
                     Intent intent = new Intent(ReportActivity.this, MapActivity.class);
                     startActivity(intent);
-                    overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+                    overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
                     finish();
                 } else if (id == R.id.navigation_add) {
                     return true;
                 } else if (id == R.id.navigation_profile) {
                     Intent intent = new Intent(ReportActivity.this, ProfileActivity.class);
                     startActivity(intent);
-                    overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+                    overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
                     finish();
                 }
                 return false;

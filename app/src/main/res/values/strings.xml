@@ -45,5 +45,10 @@
         <item>Ubicación erronea</item>
         <item>Eliminar</item>
     </string-array>
+    <string-array name="user_types">
+        <item>Usuario</item>
+        <item>Administrador</item>
+        <item>Personal</item>
+    </string-array>
     <string name="description_add_photo">Añadir foto</string>
 </resources>

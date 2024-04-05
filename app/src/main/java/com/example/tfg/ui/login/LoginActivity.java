@@ -11,7 +11,9 @@ import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
+import android.widget.CompoundButton;
 import android.widget.EditText;
+import android.widget.RadioButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -33,6 +35,11 @@ public class LoginActivity extends AppCompatActivity {
 
     private LoginViewModel loginViewModel;
     private ActivityLoginBinding binding;
+
+    private TextView register;
+    private RadioButton userButton;
+    private RadioButton adminButton;
+    private RadioButton personalButton;
 
     private static final int LOCATION_PERMISSION_REQUEST_CODE = 1;
 
@@ -59,7 +66,37 @@ public class LoginActivity extends AppCompatActivity {
         EditText usernameEditText = binding.username;
         EditText passwordEditText = binding.password;
         Button loginButton = binding.login;
-        Button registerButton = binding.register;
+        register = findViewById(R.id.register);
+        userButton = findViewById(R.id.userButton);
+        adminButton = findViewById(R.id.adminButton);
+        personalButton = findViewById(R.id.personalButton);
+
+        userButton.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked) {
+                    register.setVisibility(View.VISIBLE);
+                }
+            }
+        });
+
+        adminButton.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked) {
+                    register.setVisibility(View.GONE);
+                }
+            }
+        });
+
+        personalButton.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked) {
+                    register.setVisibility(View.GONE);
+                }
+            }
+        });
 
         loginViewModel.getLoginFormState().observe(this, new Observer<LoginFormState>() {
             @Override
@@ -130,24 +167,38 @@ public class LoginActivity extends AppCompatActivity {
         loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (loginViewModel.login(usernameEditText.getText().toString(),
-                        passwordEditText.getText().toString())) {
+                if (userButton.isChecked()) {
+                    if (loginViewModel.login(usernameEditText.getText().toString(),
+                            passwordEditText.getText().toString())) {
 
-                    Intent homeIntent = new Intent(LoginActivity.this, MapActivity.class);
-                    startActivity(homeIntent);
-                    overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
-                    finish();
+                        Intent homeIntent = new Intent(LoginActivity.this, MapActivity.class);
+                        startActivity(homeIntent);
+                        overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+                        finish();
+                    }
+                } else if (adminButton.isChecked()) {
+                    if (loginViewModel.loginAdmin(usernameEditText.getText().toString(),
+                            passwordEditText.getText().toString())) {
 
+                        // Intent para el flujo de administrador
+                    }
+                } else if (personalButton.isChecked()) {
+                    if (loginViewModel.loginPersonal(usernameEditText.getText().toString(),
+                            passwordEditText.getText().toString())) {
+
+                        // Intent para el flujo de personal
+                    }
                 }
             }
         });
 
-        registerButton.setOnClickListener(new View.OnClickListener() {
+
+        register.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(LoginActivity.this, RegisterActivity.class);
                 startActivity(intent);
-                overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+                overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
                 finish();
             }
         });

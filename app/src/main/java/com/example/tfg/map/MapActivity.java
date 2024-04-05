@@ -83,12 +83,12 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                 } else if (id == R.id.navigation_add) {
                     Intent intent = new Intent(MapActivity.this, ReportActivity.class);
                     startActivity(intent);
-                    overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+                    overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
                     finish();
                 } else if (id == R.id.navigation_profile) {
                     Intent intent = new Intent(MapActivity.this, ProfileActivity.class);
                     startActivity(intent);
-                    overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+                    overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
                     finish();
                 }
                 return false;

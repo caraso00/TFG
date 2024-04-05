@@ -9,6 +9,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.tfg.R;
 import com.example.tfg.profile.ProfileActivity;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 public class PointsActivity extends AppCompatActivity {
 
@@ -21,12 +22,15 @@ public class PointsActivity extends AppCompatActivity {
 
         backView = findViewById(R.id.backView);
 
+        BottomNavigationView navView = findViewById(R.id.navigation);
+        navView.setSelectedItemId(R.id.navigation_profile);
+
         backView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(PointsActivity.this, ProfileActivity.class);
                 startActivity(intent);
-                overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+                overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
                 finish();
             }
         });

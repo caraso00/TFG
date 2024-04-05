@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/navigation_home"
+        android:icon="@drawable/home"
+        android:title="Inicio" />
+    <item
+        android:id="@+id/navigation_add"
+        android:icon="@drawable/add_circle"
+        android:title="Añadir temporal" />
+    <item
+        android:id="@+id/navigation_truck"
+        android:icon="@drawable/camion_de_la_basura"
+        android:title="Ruta" />
+    <item
+        android:id="@+id/navigation_profile"
+        android:icon="@drawable/profile"
+        android:title="Perfil" />
+</menu>
