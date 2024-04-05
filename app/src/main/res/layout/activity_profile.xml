@@ -7,6 +7,20 @@
     android:textAlignment="center"
     android:background="#FFFFFF">
 
+    <com.google.android.material.bottomnavigation.BottomNavigationView
+        android:id="@+id/logout"
+        android:layout_width="266dp"
+        android:layout_height="37dp"
+        android:layout_marginBottom="100dp"
+        android:background="#FF0000"
+        android:textAlignment="center"
+        app:itemIconTint="@color/white"
+        app:itemTextColor="#FFFFFF"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:menu="@menu/top_navigation_menu" />
+
     <ImageView
         android:id="@+id/addPhotoImageView"
         android:layout_width="122dp"
@@ -29,7 +43,9 @@
         android:background="#000000"
         app:layout_constraintTop_toTopOf="parent"
         tools:ignore="MissingConstraints"
-        tools:layout_editor_absoluteX="0dp" />
+        tools:layout_editor_absoluteX="0dp" >
+
+    </com.google.android.material.navigation.NavigationView>
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/navigation"
@@ -99,14 +115,15 @@
 
     <com.google.android.material.navigation.NavigationView
         android:id="@+id/background"
-        android:layout_width="459dp"
-        android:layout_height="407dp"
-        android:layout_marginTop="120dp"
+        android:layout_width="469dp"
+        android:layout_height="327dp"
+        android:layout_marginTop="90dp"
         android:background="#BAB9B9"
         app:layout_constraintBottom_toBottomOf="@+id/navigation"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/navigationView2">
+        app:layout_constraintTop_toBottomOf="@+id/navigationView2"
+        app:layout_constraintVertical_bias="0.423">
 
     </com.google.android.material.navigation.NavigationView>
 

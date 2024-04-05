@@ -7,20 +7,6 @@
     android:background="#FFFFFF"
     tools:context=".map.MapActivity">
 
-    <com.google.android.material.bottomnavigation.BottomNavigationView
-        android:id="@+id/logout"
-        android:layout_width="90dp"
-        android:layout_height="70dp"
-        android:layout_marginStart="290dp"
-        android:layout_marginTop="15dp"
-        android:background="#BA98EA"
-        app:itemIconTint="@color/white"
-        app:itemTextColor="#FFFFFF"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:menu="@menu/top_navigation_menu"
-        tools:layout_marginStart="270dp" />
-
     <com.google.android.material.navigation.NavigationView
         android:id="@+id/navigationView"
         android:layout_width="426dp"

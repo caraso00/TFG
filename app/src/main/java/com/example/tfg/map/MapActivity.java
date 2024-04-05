@@ -95,20 +95,6 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
             }
         });
 
-        BottomNavigationView logout = findViewById(R.id.logout);
-        logout.setSelectedItemId(R.id.invisible);
-
-        logout.setOnItemSelectedListener(new NavigationBarView.OnItemSelectedListener() {
-            @Override
-            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-                int id = item.getItemId();
-                if (id == R.id.navigation_back) {
-                    showLogoutConfirmationDialog(); // Mostrar el diálogo de confirmación antes de realizar el logout
-                }
-                return false;
-            }
-        });
-
         // Inicializar Spinner
         distanceSpinner = findViewById(R.id.spinner);
 
@@ -116,6 +102,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         viewModel.getLocationSettingResponse().observe(this, isLocationSettingSatisfied -> {
             if (Boolean.TRUE.equals(isLocationSettingSatisfied)) {
                 onLocationActivated();
+                getDeviceLocation();
             } else {
                 onLocationDeactivated();
             }
@@ -253,28 +240,5 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         builder.setNegativeButton("Cancelar", null);
 
         builder.show();
-    }
-
-    private void showLogoutConfirmationDialog() {
-        AlertDialog.Builder builder = new AlertDialog.Builder(MapActivity.this);
-        builder.setMessage("¿Estás seguro de que deseas cerrar sesión?")
-                .setCancelable(false)
-                .setPositiveButton("Sí", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        // Si el usuario hace clic en Sí, realiza el logout y cierra la sesión
-                        Intent intent = new Intent(MapActivity.this, LoginActivity.class);
-                        startActivity(intent);
-                        finish();
-                        overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
-                    }
-                })
-                .setNegativeButton("No", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        // Si el usuario hace clic en No, cancela la acción y cierra el diálogo
-                        dialog.cancel();
-                    }
-                });
-        AlertDialog alert = builder.create();
-        alert.show();
     }
 }

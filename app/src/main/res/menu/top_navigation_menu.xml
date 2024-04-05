@@ -8,6 +8,5 @@
         android:title="" />
     <item
         android:id="@+id/navigation_back"
-        android:icon="@drawable/sesion"
         android:title="Cerrar sesión" />
 </menu>

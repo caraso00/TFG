@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item
-        android:id="@+id/navigation_home"
+        android:id="@+id/navigation_admin_panel"
         android:icon="@drawable/home"
         android:title="Inicio" />
     <item
-        android:id="@+id/navigation_add"
+        android:id="@+id/navigation_add_temporal"
         android:icon="@drawable/add_circle"
         android:title="Añadir temporal" />
     <item
@@ -13,7 +13,7 @@
         android:icon="@drawable/camion_de_la_basura"
         android:title="Ruta" />
     <item
-        android:id="@+id/navigation_profile"
+        android:id="@+id/navigation_admin_profile"
         android:icon="@drawable/profile"
         android:title="Perfil" />
 </menu>
