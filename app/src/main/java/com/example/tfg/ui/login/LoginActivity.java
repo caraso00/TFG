@@ -3,8 +3,10 @@ package com.example.tfg.ui.login;
 import android.Manifest;
 import android.app.Activity;
 import android.content.Intent;
+import android.content.IntentSender;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.KeyEvent;
@@ -23,13 +25,23 @@ import androidx.annotation.StringRes;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
+import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.example.tfg.R;
 import com.example.tfg.databinding.ActivityLoginBinding;
 import com.example.tfg.map.MapActivity;
+import com.example.tfg.map.MapViewModel;
 import com.example.tfg.register.RegisterActivity;
+import com.google.android.gms.common.api.ResolvableApiException;
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.location.LocationSettingsRequest;
+import com.google.android.gms.location.LocationSettingsResponse;
+import com.google.android.gms.location.SettingsClient;
+import com.google.android.gms.tasks.Task;
 
 public class LoginActivity extends AppCompatActivity {
 
@@ -40,8 +52,9 @@ public class LoginActivity extends AppCompatActivity {
     private RadioButton userButton;
     private RadioButton adminButton;
     private RadioButton personalButton;
-
+    private MapViewModel viewModel;
     private static final int LOCATION_PERMISSION_REQUEST_CODE = 1;
+    private static final int REQUEST_CHECK_SETTINGS = 2;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -50,8 +63,12 @@ public class LoginActivity extends AppCompatActivity {
         binding = ActivityLoginBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
+        viewModel = new ViewModelProvider(this).get(MapViewModel.class);
+
         // Solicita permisos inmediatamente al iniciar
         checkAndRequestLocationPermission();
+
+        checkLocation();
 
         loginViewModel = new ViewModelProvider(this, new LoginViewModelFactory())
                 .get(LoginViewModel.class);
@@ -219,11 +236,31 @@ public class LoginActivity extends AppCompatActivity {
             ActivityCompat.requestPermissions(this,
                     new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
                     LOCATION_PERMISSION_REQUEST_CODE);
+
+            viewModel.checkLocationSettings(this);
         } else {
-            // Si los permisos ya están concedidos, puedes proceder con el flujo de login
+
         }
     }
 
+    private void  checkLocation() {
+        viewModel.checkLocationSettings(this);
+
+        viewModel.getLocationSettingResponse().observe(this, isLocationSettingSatisfied -> {
+            if (Boolean.TRUE.equals(isLocationSettingSatisfied)) {
+                FusedLocationProviderClient fusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
+            } else {
+            }
+        });
+
+        viewModel.getResolvableApiException().observe(this, resolvable -> {
+            try {
+                resolvable.startResolutionForResult(LoginActivity.this, REQUEST_CHECK_SETTINGS);
+            } catch (IntentSender.SendIntentException sendEx) {
+
+            }
+        });
+    }
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);

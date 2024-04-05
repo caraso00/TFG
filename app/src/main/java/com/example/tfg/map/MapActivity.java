@@ -1,11 +1,7 @@
 package com.example.tfg.map;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
-import androidx.lifecycle.ViewModelProvider;
-
 import android.Manifest;
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -17,15 +13,21 @@ import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationManager;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.MultiAutoCompleteTextView;
 import android.widget.Spinner;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.lifecycle.ViewModelProvider;
+
 import com.example.tfg.R;
 import com.example.tfg.profile.ProfileActivity;
 import com.example.tfg.reportAdd.ReportActivity;
-import com.example.tfg.ui.login.LoginActivity;
+import com.google.android.gms.common.api.ResolvableApiException;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -44,7 +46,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     private GoogleMap mMap;
     private FusedLocationProviderClient fusedLocationClient;
 
-    private MapActivityViewModel viewModel;
+    private MapViewModel viewModel;
 
     private Spinner distanceSpinner;
     private MultiAutoCompleteTextView multiSelectionDropdown;
@@ -53,24 +55,20 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     private final String[] items = {"Orgánico", "Papel y cartón", "Vidrio", "Papelera"};
 
     private static final int REQUEST_CHECK_SETTINGS = 2;
+    private static final int LOCATION_PERMISSION_REQUEST_CODE = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_map);
 
-        // Inicializamos el ViewModel
-        viewModel = new ViewModelProvider(this).get(MapActivityViewModel.class);
-
-        // Llamada al ViewModel para pedir permisos
-        viewModel.checkAndRequestPermissions(this);
+        viewModel = new ViewModelProvider(this).get(MapViewModel.class);
 
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
 
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
-
 
         BottomNavigationView navView = findViewById(R.id.navigation);
         navView.setSelectedItemId(R.id.navigation_home);
@@ -95,10 +93,8 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
             }
         });
 
-        // Inicializar Spinner
         distanceSpinner = findViewById(R.id.spinner);
 
-        // Observamos el LiveData para la configuración de ubicación
         viewModel.getLocationSettingResponse().observe(this, isLocationSettingSatisfied -> {
             if (Boolean.TRUE.equals(isLocationSettingSatisfied)) {
                 onLocationActivated();
@@ -108,7 +104,6 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
             }
         });
 
-        // Observamos el LiveData para excepciones resolubles
         viewModel.getResolvableApiException().observe(this, resolvable -> {
             try {
                 resolvable.startResolutionForResult(MapActivity.this, REQUEST_CHECK_SETTINGS);
@@ -184,22 +179,21 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
             public void onSuccess(Location location) {
                 if (location != null && mMap != null) {
                     LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
-                    mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 19f)); // Zoom de 15 (puedes ajustarlo según sea necesario)
+                    mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 19f));
+                    Log.d("Zoom", "Haciendo zoom");
                 }
             }
         });
     }
 
-    // Cuando se active la ubicación, se habilita el Spinner:
     public void onLocationActivated() {
         distanceSpinner.setEnabled(true);
-        distanceSpinner.setAlpha(1.0f); // Esto hará que se vea "normal".
+        distanceSpinner.setAlpha(1.0f);
     }
 
-    // Y cuando se desactive la ubicación, se deshabilita el Spinner:
     public void onLocationDeactivated() {
         distanceSpinner.setEnabled(false);
-        distanceSpinner.setAlpha(0.5f); // Esto hará que se vea más "oscuro" o "apagado".
+        distanceSpinner.setAlpha(0.5f);
     }
 
     private void showMultiChoiceDialog() {
@@ -209,7 +203,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         builder.setMultiChoiceItems(items, selectedItems, new DialogInterface.OnMultiChoiceClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which, boolean isChecked) {
-                selectedItems[which] = isChecked; // Aquí actualizamos los ítems seleccionados
+                selectedItems[which] = isChecked;
             }
         });
 
