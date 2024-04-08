@@ -33,6 +33,11 @@
         <item>Papel y cartón</item>
         <item>Vidrio</item>
     </string-array>
+    <string-array name="type_temp_options">
+        <item>Electrónico</item>
+        <item>Ropa</item>
+        <item>Aceite</item>
+    </string-array>
     <string-array name="status_options">
         <item>Perfecto</item>
         <item>Bien</item>

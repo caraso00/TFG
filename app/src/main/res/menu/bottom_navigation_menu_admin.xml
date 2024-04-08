@@ -7,7 +7,7 @@
     <item
         android:id="@+id/navigation_add_temporal"
         android:icon="@drawable/add_circle"
-        android:title="Añadir temporal" />
+        android:title="Añadir temp" />
     <item
         android:id="@+id/navigation_truck"
         android:icon="@drawable/camion_de_la_basura"

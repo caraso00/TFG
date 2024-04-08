@@ -30,6 +30,7 @@ import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.example.tfg.R;
+import com.example.tfg.adminPanel.AdminPanel;
 import com.example.tfg.databinding.ActivityLoginBinding;
 import com.example.tfg.map.MapActivity;
 import com.example.tfg.map.MapViewModel;
@@ -67,8 +68,6 @@ public class LoginActivity extends AppCompatActivity {
 
         // Solicita permisos inmediatamente al iniciar
         checkAndRequestLocationPermission();
-
-        checkLocation();
 
         loginViewModel = new ViewModelProvider(this, new LoginViewModelFactory())
                 .get(LoginViewModel.class);
@@ -197,7 +196,10 @@ public class LoginActivity extends AppCompatActivity {
                     if (loginViewModel.loginAdmin(usernameEditText.getText().toString(),
                             passwordEditText.getText().toString())) {
 
-                        // Intent para el flujo de administrador
+                        Intent homeIntent = new Intent(LoginActivity.this, AdminPanel.class);
+                        startActivity(homeIntent);
+                        overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+                        finish();
                     }
                 } else if (personalButton.isChecked()) {
                     if (loginViewModel.loginPersonal(usernameEditText.getText().toString(),
@@ -239,7 +241,7 @@ public class LoginActivity extends AppCompatActivity {
 
             viewModel.checkLocationSettings(this);
         } else {
-
+            checkLocation();
         }
     }
 
@@ -250,6 +252,7 @@ public class LoginActivity extends AppCompatActivity {
             if (Boolean.TRUE.equals(isLocationSettingSatisfied)) {
                 FusedLocationProviderClient fusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
             } else {
+                checkLocation();
             }
         });
 
@@ -257,7 +260,7 @@ public class LoginActivity extends AppCompatActivity {
             try {
                 resolvable.startResolutionForResult(LoginActivity.this, REQUEST_CHECK_SETTINGS);
             } catch (IntentSender.SendIntentException sendEx) {
-
+                checkLocation();
             }
         });
     }
@@ -266,7 +269,7 @@ public class LoginActivity extends AppCompatActivity {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         if (requestCode == LOCATION_PERMISSION_REQUEST_CODE) {
             if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                // Permiso concedido, puedes proceder con el flujo de login
+                checkLocation();
             } else {
                 // Permiso denegado, cierra la aplicación
                 Toast.makeText(this, "Permiso de ubicación necesario", Toast.LENGTH_SHORT).show();

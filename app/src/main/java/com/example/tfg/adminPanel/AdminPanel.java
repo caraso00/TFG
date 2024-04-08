@@ -13,6 +13,7 @@ import com.example.tfg.map.MapActivity;
 import com.example.tfg.points.PointsActivity;
 import com.example.tfg.profile.ProfileActivity;
 import com.example.tfg.reportAdd.ReportActivity;
+import com.example.tfg.reportTemp.ReportTempActivity;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationBarView;
 
@@ -33,7 +34,10 @@ public class AdminPanel extends AppCompatActivity {
                 if (id == R.id.navigation_admin_panel) {
                     return true;
                 } else if (id == R.id.navigation_add_temporal) {
-                    return true;
+                    Intent intent = new Intent(AdminPanel.this, ReportTempActivity.class);
+                    startActivity(intent);
+                    overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
+                    finish();
                 } else if (id == R.id.navigation_truck) {
                     return true;
                 } else if (id == R.id.navigation_admin_profile) {
