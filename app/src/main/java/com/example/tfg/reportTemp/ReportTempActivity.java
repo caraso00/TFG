@@ -1,7 +1,10 @@
 package com.example.tfg.reportTemp;
 
+import android.app.AlertDialog;
 import android.app.DatePickerDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
 import android.location.Address;
 import android.location.Geocoder;
 import android.os.Bundle;
@@ -20,6 +23,7 @@ import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 
 import com.example.tfg.R;
 import com.example.tfg.adminPanel.AdminPanel;
@@ -135,8 +139,58 @@ public class ReportTempActivity extends AppCompatActivity implements DatePickerD
                 else if (ubiReportTextView != null && numberOfPhotos >= 2 && type.length() > 0) {
                     Toast.makeText(ReportTempActivity.this, "Contenedor creado", Toast.LENGTH_SHORT).show();
                     Intent intent = new Intent(ReportTempActivity.this, AdminPanel.class);
-                    startActivity(intent);
-                    finish();
+
+                    // Crear el cuadro de diálogo emergente
+                    AlertDialog.Builder builder = new AlertDialog.Builder(ReportTempActivity.this);
+                    View dialogView = getLayoutInflater().inflate(R.layout.dialog_content_layout, null);
+                    builder.setView(dialogView);
+
+                    //Configurar los textos
+                    EditText tituloEditText = dialogView.findViewById(R.id.tituloEditText);
+                    EditText descripcionEditText = dialogView.findViewById(R.id.descripcionEditText);
+
+                    // Configurar textos clicables
+                    TextView acceptTextView = dialogView.findViewById(R.id.acceptTextView);
+                    TextView cancelTextView = dialogView.findViewById(R.id.cancelTextView);
+
+                    // Crear el cuadro de diálogo
+                    AlertDialog dialog = builder.create();
+
+                    // Configurar acciones para los textos clicables
+                    acceptTextView.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            String titulo = tituloEditText.getText().toString();
+                            String descripcion = descripcionEditText.getText().toString();
+
+                            if (titulo.length() < 3) {
+                                // Si el título tiene menos de 3 caracteres, mostrar un mensaje de error
+                                Toast.makeText(ReportTempActivity.this, "El título debe tener al menos 3 caracteres", Toast.LENGTH_SHORT).show();
+                            } else if (descripcion.length() < 10) {
+                                // Si la descripción tiene menos de 10 caracteres, mostrar un mensaje de error
+                                Toast.makeText(ReportTempActivity.this, "La descripción debe tener al menos 10 caracteres", Toast.LENGTH_SHORT).show();
+                            } else {
+                                dialog.dismiss();
+                                Toast.makeText(ReportTempActivity.this, "Aviso creado", Toast.LENGTH_LONG).show();
+                                Intent intent = new Intent(ReportTempActivity.this, AdminPanel.class);
+                                startActivity(intent);
+                                finish();
+                            }
+                        }
+                    });
+
+                    cancelTextView.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            dialog.dismiss();
+                            Intent intent = new Intent(ReportTempActivity.this, AdminPanel.class);
+                            startActivity(intent);
+                            finish();
+                        }
+                    });
+
+                    // Mostrar el cuadro de diálogo emergente
+                    dialog.show();
                 } else {
                     Toast.makeText(ReportTempActivity.this, "Por favor, completa todos los campos", Toast.LENGTH_SHORT).show();
                 }
