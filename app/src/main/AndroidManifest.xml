@@ -38,6 +38,18 @@
             android:value="AIzaSyBT3BkCpwiTinLqos5gesu8yKKwCTxe2Go" />
 
         <activity
+            android:name=".reportTemp.ReportTempActivity"
+            android:exported="true"
+            android:label="ReportTempActivity"
+            android:screenOrientation="portrait" />
+
+        <activity
+            android:name=".adminPanel.AdminPanel"
+            android:exported="true"
+            android:label="AdminPanelActivity"
+            android:screenOrientation="portrait" />
+
+        <activity
             android:name=".points.PointsActivity"
             android:exported="true"
             android:label="PointsActivity"

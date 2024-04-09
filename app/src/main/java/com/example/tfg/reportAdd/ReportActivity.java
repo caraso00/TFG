@@ -41,13 +41,9 @@ public class ReportActivity extends AppCompatActivity {
     private TextView imageCountTextView;
 
 
-    private static final int CAMERA_PERMISSION_REQUEST_CODE = 1;
-    private static final int GALLERY_PERMISSION_REQUEST_CODE = 2;
-    private static final int REQUEST_LOCATION_PICK = 3;
-    private static final int REQUEST_IMAGE_CAPTURE = 4;
-    private static final int REQUEST_SELECT_PHOTOS = 5;
 
-    private String currentPhotoPath;
+    private static final int REQUEST_LOCATION_PICK = 1;
+    private static final int REQUEST_SELECT_PHOTOS = 2;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -112,6 +108,7 @@ public class ReportActivity extends AppCompatActivity {
                     Toast.makeText(ReportActivity.this, "Solicitud enviada", Toast.LENGTH_SHORT).show();
                     Intent intent = new Intent(ReportActivity.this, MapActivity.class);
                     startActivity(intent);
+                    finish();
                 } else {
                     Toast.makeText(ReportActivity.this, "Por favor, completa todos los campos", Toast.LENGTH_SHORT).show();
                 }
