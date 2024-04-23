@@ -9,7 +9,7 @@
         android:icon="@drawable/add_circle"
         android:title="Añadir temp" />
     <item
-        android:id="@+id/navigation_truck"
+        android:id="@+id/navigation_route"
         android:icon="@drawable/camion_de_la_basura"
         android:title="Ruta" />
     <item

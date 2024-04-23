@@ -23,29 +23,4 @@ public class MultiSelectArrayAdapter extends ArrayAdapter<String> {
         this.items = new ArrayList<>(Arrays.asList(objects));
         itemChecked = new boolean[items.size()];
     }
-
-    @NonNull
-    @Override
-    public View getView(int position, View convertView, @NonNull ViewGroup parent) {
-        if (convertView == null) {
-            LayoutInflater inflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            convertView = inflater.inflate(android.R.layout.simple_list_item_multiple_choice, parent, false);
-        }
-        TextView textView = convertView.findViewById(android.R.id.text1);
-        textView.setText(items.get(position));
-        return convertView;
-    }
-
-    public boolean[] getCheckedItemPositions() {
-        return itemChecked;
-    }
-
-    public void toggleChecked(int position) {
-        itemChecked[position] = !itemChecked[position];
-        notifyDataSetChanged();
-    }
-
-    public String[] getItemsArray() {
-        return items.toArray(new String[0]);
-    }
 }

@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.content.IntentSender;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
-import android.provider.Settings;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.KeyEvent;
@@ -25,24 +24,17 @@ import androidx.annotation.StringRes;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
-import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.example.tfg.R;
-import com.example.tfg.adminPanel.AdminPanel;
+import com.example.tfg.adminPanel.AdminPanelActivity;
 import com.example.tfg.databinding.ActivityLoginBinding;
 import com.example.tfg.map.MapActivity;
 import com.example.tfg.map.MapViewModel;
 import com.example.tfg.register.RegisterActivity;
-import com.google.android.gms.common.api.ResolvableApiException;
 import com.google.android.gms.location.FusedLocationProviderClient;
-import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
-import com.google.android.gms.location.LocationSettingsRequest;
-import com.google.android.gms.location.LocationSettingsResponse;
-import com.google.android.gms.location.SettingsClient;
-import com.google.android.gms.tasks.Task;
 
 public class LoginActivity extends AppCompatActivity {
 
@@ -196,7 +188,7 @@ public class LoginActivity extends AppCompatActivity {
                     if (loginViewModel.loginAdmin(usernameEditText.getText().toString(),
                             passwordEditText.getText().toString())) {
 
-                        Intent homeIntent = new Intent(LoginActivity.this, AdminPanel.class);
+                        Intent homeIntent = new Intent(LoginActivity.this, AdminPanelActivity.class);
                         startActivity(homeIntent);
                         overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
                         finish();

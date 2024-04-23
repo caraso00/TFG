@@ -2,9 +2,7 @@ package com.example.tfg.reportTemp;
 
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.drawable.Drawable;
 import android.location.Address;
 import android.location.Geocoder;
 import android.os.Bundle;
@@ -23,14 +21,13 @@ import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.content.ContextCompat;
 
 import com.example.tfg.R;
-import com.example.tfg.adminPanel.AdminPanel;
-import com.example.tfg.map.MapActivity;
-import com.example.tfg.reportAdd.ReportActivity;
+import com.example.tfg.adminPanel.AdminPanelActivity;
+import com.example.tfg.adminProfile.AdminProfileActivity;
 import com.example.tfg.reportAdd.SelectLocationActivity;
 import com.example.tfg.reportAdd.SelectPhotoActivity;
+import com.example.tfg.route.RouteActivity;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationBarView;
 
@@ -47,7 +44,7 @@ public class ReportTempActivity extends AppCompatActivity implements DatePickerD
     private Spinner typeSpinner;
     private EditText dateInicioEditText;
     private EditText dateFinEditText;
-    private EditText fechaSeleccionadaEditText; // Variable para rastrear el EditText seleccionado
+    private EditText fechaSeleccionadaEditText;
     private Button selectLocationButton;
     private ImageView addPhotoImageView;
     private Button acceptButton;
@@ -80,16 +77,22 @@ public class ReportTempActivity extends AppCompatActivity implements DatePickerD
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                 int id = item.getItemId();
                 if (id == R.id.navigation_admin_panel) {
-                    Intent intent = new Intent(ReportTempActivity.this, AdminPanel.class);
+                    Intent intent = new Intent(ReportTempActivity.this, AdminPanelActivity.class);
                     startActivity(intent);
                     overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
                     finish();
                 } else if (id == R.id.navigation_add_temporal) {
                     return true;
-                } else if (id == R.id.navigation_truck) {
-                    return true;
+                } else if (id == R.id.navigation_route) {
+                    Intent intent = new Intent(ReportTempActivity.this, RouteActivity.class);
+                    startActivity(intent);
+                    overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
+                    finish();
                 } else if (id == R.id.navigation_admin_profile) {
-                    return true;
+                    Intent intent = new Intent(ReportTempActivity.this, AdminProfileActivity.class);
+                    startActivity(intent);
+                    overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
+                    finish();
                 }
                 return false;
             }
@@ -138,7 +141,7 @@ public class ReportTempActivity extends AppCompatActivity implements DatePickerD
                 }
                 else if (ubiReportTextView != null && numberOfPhotos >= 2 && type.length() > 0) {
                     Toast.makeText(ReportTempActivity.this, "Contenedor creado", Toast.LENGTH_SHORT).show();
-                    Intent intent = new Intent(ReportTempActivity.this, AdminPanel.class);
+                    Intent intent = new Intent(ReportTempActivity.this, AdminPanelActivity.class);
 
                     // Crear el cuadro de diálogo emergente
                     AlertDialog.Builder builder = new AlertDialog.Builder(ReportTempActivity.this);
@@ -172,7 +175,7 @@ public class ReportTempActivity extends AppCompatActivity implements DatePickerD
                             } else {
                                 dialog.dismiss();
                                 Toast.makeText(ReportTempActivity.this, "Aviso creado", Toast.LENGTH_LONG).show();
-                                Intent intent = new Intent(ReportTempActivity.this, AdminPanel.class);
+                                Intent intent = new Intent(ReportTempActivity.this, AdminPanelActivity.class);
                                 startActivity(intent);
                                 finish();
                             }
@@ -183,7 +186,7 @@ public class ReportTempActivity extends AppCompatActivity implements DatePickerD
                         @Override
                         public void onClick(View v) {
                             dialog.dismiss();
-                            Intent intent = new Intent(ReportTempActivity.this, AdminPanel.class);
+                            Intent intent = new Intent(ReportTempActivity.this, AdminPanelActivity.class);
                             startActivity(intent);
                             finish();
                         }
