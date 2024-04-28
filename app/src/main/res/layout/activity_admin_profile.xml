@@ -73,7 +73,7 @@
     </com.google.android.material.bottomnavigation.BottomNavigationView>
 
     <TextView
-        android:id="@+id/panelAdminText"
+        android:id="@+id/panelPersonalText"
         tools:ignore="MissingConstraints"
         android:layout_width="409dp"
         android:layout_height="58dp"

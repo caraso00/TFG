@@ -32,6 +32,7 @@ import com.example.tfg.adminPanel.AdminPanelActivity;
 import com.example.tfg.databinding.ActivityLoginBinding;
 import com.example.tfg.map.MapActivity;
 import com.example.tfg.map.MapViewModel;
+import com.example.tfg.personalHome.PersonalHomeActivity;
 import com.example.tfg.register.RegisterActivity;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
@@ -196,8 +197,10 @@ public class LoginActivity extends AppCompatActivity {
                 } else if (personalButton.isChecked()) {
                     if (loginViewModel.loginPersonal(usernameEditText.getText().toString(),
                             passwordEditText.getText().toString())) {
-
-                        // Intent para el flujo de personal
+                        Intent homeIntent = new Intent(LoginActivity.this, PersonalHomeActivity.class);
+                        startActivity(homeIntent);
+                        overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+                        finish();
                     }
                 }
             }

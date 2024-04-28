@@ -38,6 +38,18 @@
             android:value="AIzaSyBT3BkCpwiTinLqos5gesu8yKKwCTxe2Go" />
 
         <activity
+            android:name=".personalProfile.PersonalProfileActivity"
+            android:exported="true"
+            android:label="PersonalProfileActivity"
+            android:screenOrientation="portrait" />
+
+        <activity
+            android:name=".personalHome.PersonalHomeActivity"
+            android:exported="true"
+            android:label="PersonalHomeActivity"
+            android:screenOrientation="portrait" />
+
+        <activity
             android:name=".adminProfile.AdminProfileActivity"
             android:exported="true"
             android:label="AdminProfileActivity"

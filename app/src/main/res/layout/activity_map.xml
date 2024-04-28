@@ -13,7 +13,8 @@
         android:layout_height="116dp"
         android:background="#000000"
         tools:layout_editor_absoluteX="-8dp"
-        tools:layout_editor_absoluteY="-20dp" >
+        tools:layout_editor_absoluteY="-20dp"
+        tools:ignore="MissingConstraints">
 
     </com.google.android.material.navigation.NavigationView>
 
