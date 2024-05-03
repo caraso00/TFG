@@ -7,6 +7,111 @@
     android:textAlignment="center"
     android:background="#FFFFFF">
 
+    <ScrollView
+        android:id="@+id/background"
+        android:layout_width="411dp"
+        android:layout_height="358dp"
+        android:layout_marginTop="184dp"
+        android:background="#BAB9B9"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/navigationView2">
+
+        <LinearLayout
+            android:id="@+id/activityContainer"
+            android:layout_width="match_parent"
+            android:layout_height="200dp"
+            android:orientation="vertical"
+            android:padding="8dp">
+
+        </LinearLayout>
+
+    </ScrollView>
+
+    <TextView
+        android:id="@+id/textView5"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="200dp"
+        android:text="Registro de actividad"
+        android:textAlignment="center"
+        android:textColor="#000000"
+        app:layout_constraintTop_toBottomOf="@+id/navigationView2"
+        tools:ignore="MissingConstraints"
+        tools:layout_editor_absoluteX="1dp" />
+
+    <TextView
+        android:id="@+id/contenedoresBorradosPersonal"
+        android:layout_width="143dp"
+        android:layout_height="50dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="-25dp"
+        android:background="@drawable/border"
+        android:text="Default"
+        android:textAlignment="center"
+        android:textColor="#8A7D7D"
+        app:layout_constraintBottom_toTopOf="@+id/background"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/userNameTextView"
+        app:layout_constraintVertical_bias="0.0" />
+
+    <TextView
+        android:id="@+id/contedoresCreadosPersonal"
+        android:layout_width="130dp"
+        android:layout_height="51dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="-25dp"
+        android:background="@drawable/border"
+        android:text="Default"
+        android:textAlignment="center"
+        android:textColor="#8A7D7D"
+        app:layout_constraintBottom_toTopOf="@+id/background"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/userNameTextView"
+        app:layout_constraintVertical_bias="0.0" />
+
+    <TextView
+        android:id="@+id/contenedoresModificadosPersonal"
+        android:layout_width="142dp"
+        android:layout_height="51dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="-25dp"
+        android:background="@drawable/border"
+        android:text="Default"
+        android:textAlignment="center"
+        android:textColor="#8A7D7D"
+        app:layout_constraintBottom_toTopOf="@+id/background"
+        app:layout_constraintStart_toEndOf="@+id/contedoresCreadosPersonal"
+        app:layout_constraintTop_toBottomOf="@+id/userNameTextView"
+        app:layout_constraintVertical_bias="0.0" />
+
+    <TextView
+        android:id="@+id/userNameTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="27dp"
+        android:layout_marginTop="4dp"
+        android:text="Julio Gomez"
+        android:textColor="#000000"
+        android:textSize="20sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/addPhotoImageView" />
+
+    <ImageView
+        android:id="@+id/addPhotoImageView"
+        android:layout_width="122dp"
+        android:layout_height="85dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="10dp"
+        android:clickable="true"
+        android:contentDescription="@string/description_add_photo"
+        android:focusable="true"
+        android:src="@drawable/captura2"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.056"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/navigationView2" />
+
     <com.google.android.material.navigation.NavigationView
         android:id="@+id/navigationView2"
         tools:ignore="MissingConstraints"

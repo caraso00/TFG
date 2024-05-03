@@ -3,8 +3,15 @@ package com.example.tfg.personalProfile;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
+import android.text.Spannable;
+import android.text.SpannableString;
+import android.text.style.ForegroundColorSpan;
 import android.view.MenuItem;
+import android.widget.LinearLayout;
+import android.widget.ScrollView;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -15,6 +22,7 @@ import com.example.tfg.profile.ProfileActivity;
 import com.example.tfg.ui.login.LoginActivity;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationBarView;
+
 
 public class PersonalProfileActivity extends AppCompatActivity {
 
@@ -42,6 +50,20 @@ public class PersonalProfileActivity extends AppCompatActivity {
             }
         });
 
+        TextView contenedoresCreados = findViewById(R.id.contedoresCreadosPersonal);
+        TextView contenedoresModificados = findViewById(R.id.contenedoresModificadosPersonal);
+        TextView contenedoresBorrados = findViewById(R.id.contenedoresBorradosPersonal);
+
+        // Llamar a la función para cada TextView
+        setFormattedText(contenedoresCreados, 5, "Creados");
+        setFormattedText(contenedoresModificados, 3, "Modificados");
+        setFormattedText(contenedoresBorrados, 2, "Borrados");
+
+
+        LinearLayout activityContainer = findViewById(R.id.activityContainer);
+
+
+
         BottomNavigationView logout = findViewById(R.id.logout);
         logout.setSelectedItemId(R.id.invisible);
 
@@ -56,6 +78,14 @@ public class PersonalProfileActivity extends AppCompatActivity {
             }
         });
 
+    }
+
+    private void setFormattedText(TextView textView, int number, String description) {
+        String text = number + "\n" + description;
+        SpannableString spannableString = new SpannableString(text);
+        spannableString.setSpan(new ForegroundColorSpan(Color.BLACK), 0, String.valueOf(number).length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+        spannableString.setSpan(new ForegroundColorSpan(Color.parseColor("#8A7D7D")), String.valueOf(number).length() + 1, text.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+        textView.setText(spannableString);
     }
 
     private void showLogoutConfirmationDialog() {
