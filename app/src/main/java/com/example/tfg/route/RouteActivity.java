@@ -1,22 +1,20 @@
-package com.example.tfg.map;
+package com.example.tfg.route;
 
 import android.Manifest;
-import android.app.AlertDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.IntentSender;
 import android.content.pm.PackageManager;
+import android.location.Address;
+import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.MultiAutoCompleteTextView;
-import android.widget.Spinner;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -24,8 +22,9 @@ import androidx.core.app.ActivityCompat;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.example.tfg.R;
-import com.example.tfg.profile.ProfileActivity;
-import com.example.tfg.reportAdd.ReportActivity;
+import com.example.tfg.adminPanel.AdminPanelActivity;
+import com.example.tfg.adminProfile.AdminProfileActivity;
+import com.example.tfg.reportTemp.ReportTempActivity;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -33,56 +32,56 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationBarView;
 
-import java.util.Arrays;
+import java.io.IOException;
+import java.util.List;
+import java.util.Locale;
 
-public class MapActivity extends AppCompatActivity implements OnMapReadyCallback {
+public class RouteActivity extends AppCompatActivity implements OnMapReadyCallback {
 
+    private RouteViewModel viewModel;
     private GoogleMap mMap;
-    private FusedLocationProviderClient fusedLocationClient;
-
-    private MapViewModel viewModel;
-
-    private Spinner distanceSpinner;
-    private MultiAutoCompleteTextView multiSelectionDropdown;
-    private MultiSelectArrayAdapter adapter;
-    private boolean[] selectedItems;
-    private final String[] items = {"Orgánico", "Papel y cartón", "Vidrio", "Papelera"};
-
-    private static final int REQUEST_CHECK_SETTINGS = 2;
-    private static final int LOCATION_PERMISSION_REQUEST_CODE = 1;
+    private LatLng selectedLatLng;
+    private TextView ubiTextView;
+    private static final int REQUEST_CHECK_SETTINGS = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_map);
+        setContentView(R.layout.activity_route);
 
-        viewModel = new ViewModelProvider(this).get(MapViewModel.class);
-
-        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
-                .findFragmentById(R.id.map);
+        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
 
-        fusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
+        ubiTextView = findViewById(R.id.ubiTextViewRoute);
 
-        BottomNavigationView navView = findViewById(R.id.navigation);
-        navView.setSelectedItemId(R.id.navigation_home);
+
+        viewModel = new ViewModelProvider(this).get(RouteViewModel.class);
+
+        BottomNavigationView navView = findViewById(R.id.adminNavigation);
+        navView.setSelectedItemId(R.id.navigation_route);
         navView.setOnItemSelectedListener(new NavigationBarView.OnItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                 int id = item.getItemId();
-                if (id == R.id.navigation_home) {
-                    return true;
-                } else if (id == R.id.navigation_add) {
-                    Intent intent = new Intent(MapActivity.this, ReportActivity.class);
+                if (id == R.id.navigation_admin_panel) {
+                    Intent intent = new Intent(RouteActivity.this, AdminPanelActivity.class);
                     startActivity(intent);
-                    overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
+                    overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
                     finish();
-                } else if (id == R.id.navigation_profile) {
-                    Intent intent = new Intent(MapActivity.this, ProfileActivity.class);
+                } else if (id == R.id.navigation_add_temporal) {
+                    Intent intent = new Intent(RouteActivity.this, ReportTempActivity.class);
+                    startActivity(intent);
+                    overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
+                    finish();
+                } else if (id == R.id.navigation_route) {
+                    return true;
+                } else if (id == R.id.navigation_admin_profile) {
+                    Intent intent = new Intent(RouteActivity.this, AdminProfileActivity.class);
                     startActivity(intent);
                     overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
                     finish();
@@ -91,36 +90,17 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
             }
         });
 
-        distanceSpinner = findViewById(R.id.spinner);
-
         viewModel.getLocationSettingResponse().observe(this, isLocationSettingSatisfied -> {
             if (Boolean.TRUE.equals(isLocationSettingSatisfied)) {
-                onLocationActivated();
                 getDeviceLocation();
-            } else {
-                onLocationDeactivated();
             }
         });
 
         viewModel.getResolvableApiException().observe(this, resolvable -> {
             try {
-                resolvable.startResolutionForResult(MapActivity.this, REQUEST_CHECK_SETTINGS);
+                resolvable.startResolutionForResult(RouteActivity.this, REQUEST_CHECK_SETTINGS);
             } catch (IntentSender.SendIntentException sendEx) {
-                onLocationDeactivated();
-            }
-        });
-
-        selectedItems = new boolean[items.length];
-        Arrays.fill(selectedItems, false);
-        adapter = new MultiSelectArrayAdapter(this, android.R.layout.simple_list_item_multiple_choice, items);
-        multiSelectionDropdown = findViewById(R.id.multiSelectionDropdown);
-        multiSelectionDropdown.setAdapter(adapter);
-        multiSelectionDropdown.setTokenizer(new MultiAutoCompleteTextView.CommaTokenizer());
-
-        multiSelectionDropdown.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                showMultiChoiceDialog();
+                sendEx.printStackTrace();
             }
         });
     }
@@ -130,9 +110,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         public void onReceive(Context context, Intent intent) {
             if (intent.getAction().equals(LocationManager.PROVIDERS_CHANGED_ACTION)) {
                 if (ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-                    viewModel.checkLocationSettings(MapActivity.this);
-                } else {
-                    onLocationDeactivated();
+                    viewModel.checkLocationSettings(RouteActivity.this);
                 }
             }
         }
@@ -160,9 +138,20 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
             mMap.setMyLocationEnabled(true);
             getDeviceLocation();
             viewModel.checkLocationSettings(this);
+
         } else {
             viewModel.checkAndRequestPermissions(this);
         }
+
+        mMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
+            @Override
+            public void onMapClick(LatLng latLng) {
+                mMap.clear(); // Limpiar marcadores anteriores
+                mMap.addMarker(new MarkerOptions().position(latLng)); // Agregar marcador en la ubicación del clic
+                selectedLatLng = latLng; // Guardar las coordenadas seleccionadas
+                showAddressFromLocation(selectedLatLng.latitude, selectedLatLng.longitude); // Mostrar dirección correspondiente a las coordenadas
+            }
+        });
     }
 
     private void getDeviceLocation() {
@@ -184,53 +173,36 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         });
     }
 
-    public void onLocationActivated() {
-        distanceSpinner.setEnabled(true);
-        distanceSpinner.setAlpha(1.0f);
-    }
+    // Mostrar la dirección correspondiente a las coordenadas en el TextView
+    private void showAddressFromLocation(double latitude, double longitude) {
+        Geocoder geocoder = new Geocoder(this, Locale.getDefault());
+        try {
+            List<Address> addresses = geocoder.getFromLocation(latitude, longitude, 1);
+            if (addresses != null && !addresses.isEmpty()) {
+                Address address = addresses.get(0);
+                StringBuilder addressBuilder = new StringBuilder();
 
-    public void onLocationDeactivated() {
-        distanceSpinner.setEnabled(false);
-        distanceSpinner.setAlpha(0.5f);
-    }
-
-    private void showMultiChoiceDialog() {
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("Elija los tipos:");
-
-        builder.setMultiChoiceItems(items, selectedItems, new DialogInterface.OnMultiChoiceClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which, boolean isChecked) {
-                selectedItems[which] = isChecked;
-            }
-        });
-
-        builder.setPositiveButton("Aceptar", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                String selections = "";
-                int countSelected = 0;
-                int lastIndex = -1;
-                for (int i = 0; i < items.length; i++) {
-                    if (selectedItems[i]) {
-                        countSelected++;
-                        lastIndex = i;
+                // Obtener la calle y el número de la dirección
+                if (address.getThoroughfare() != null) {
+                    addressBuilder.append(address.getThoroughfare());
+                    if (address.getSubThoroughfare() != null) {
+                        addressBuilder.append(", ").append(address.getSubThoroughfare());
                     }
                 }
 
-                if (countSelected == 0) {
-                    selections = "";
-                } else if (countSelected == 1) {
-                    selections = items[lastIndex];
-                } else {
-                    selections = "Varios";
+                // Obtener la localidad de la dirección
+                if (address.getLocality() != null) {
+                    if (addressBuilder.length() > 0) {
+                        addressBuilder.append(", ");
+                    }
+                    addressBuilder.append(address.getLocality());
                 }
-                multiSelectionDropdown.setText(selections);
+
+                // Mostrar la dirección en el TextView
+                ubiTextView.setText(addressBuilder.toString());
             }
-        });
-
-        builder.setNegativeButton("Cancelar", null);
-
-        builder.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }

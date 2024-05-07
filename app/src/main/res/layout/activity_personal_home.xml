@@ -9,18 +9,17 @@
 
     <com.google.android.material.navigation.NavigationView
         android:id="@+id/navigationView2"
+        tools:ignore="MissingConstraints"
+        tools:layout_editor_absoluteX="0dp"
         android:layout_width="427dp"
         android:layout_height="100dp"
         android:background="#000000"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:ignore="MissingConstraints"
-        tools:layout_editor_absoluteX="0dp" />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
-        android:id="@+id/adminNavigation"
+        android:id="@+id/personalNavigation"
         android:layout_width="412dp"
         android:layout_height="82dp"
-        android:layout_marginTop="5dp"
         android:background="#000000"
         app:itemIconTint="@color/white"
         app:itemTextColor="#FFFFFF"
@@ -28,8 +27,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.515"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintVertical_bias="1.0"
-        app:menu="@menu/bottom_navigation_menu_admin">
+        app:menu="@menu/bottom_navigation_menu_personal">
 
     </com.google.android.material.bottomnavigation.BottomNavigationView>
 
@@ -38,7 +36,7 @@
         android:layout_width="409dp"
         android:layout_height="58dp"
         android:layout_marginTop="15dp"
-        android:text="Panel de administrador"
+        android:text="Panel de personal"
         android:textAlignment="center"
         android:textColor="#FFFFFF"
         android:textSize="38sp"
@@ -46,6 +44,4 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         tools:ignore="MissingConstraints" />
-
-
 </androidx.constraintlayout.widget.ConstraintLayout>
