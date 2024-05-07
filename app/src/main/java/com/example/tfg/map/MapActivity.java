@@ -9,18 +9,23 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.IntentSender;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.Canvas;
+import android.graphics.drawable.Drawable;
 import android.location.Location;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.MultiAutoCompleteTextView;
 import android.widget.Spinner;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.example.tfg.R;
@@ -32,7 +37,11 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptor;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
+import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationBarView;
@@ -51,6 +60,16 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     private MultiSelectArrayAdapter adapter;
     private boolean[] selectedItems;
     private final String[] items = {"Orgánico", "Papel y cartón", "Vidrio", "Papelera"};
+    private Marker punto1Marker;
+    private Marker punto2Marker;
+    private Marker punto3Marker;
+    private Drawable contenedorVerdeIcon;
+    private Drawable contenedorAmarilloIcon;
+    private Drawable contenedorAzulIcon;
+
+    private BitmapDescriptor contenedorVerde;
+    private BitmapDescriptor contenedorAmarillo;
+    private BitmapDescriptor contenedorAzul;
 
     private static final int REQUEST_CHECK_SETTINGS = 2;
     private static final int LOCATION_PERMISSION_REQUEST_CODE = 1;
@@ -91,7 +110,6 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
             }
         });
 
-        distanceSpinner = findViewById(R.id.spinner);
 
         viewModel.getLocationSettingResponse().observe(this, isLocationSettingSatisfied -> {
             if (Boolean.TRUE.equals(isLocationSettingSatisfied)) {
@@ -114,13 +132,49 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         Arrays.fill(selectedItems, false);
         adapter = new MultiSelectArrayAdapter(this, android.R.layout.simple_list_item_multiple_choice, items);
         multiSelectionDropdown = findViewById(R.id.multiSelectionDropdown);
-        multiSelectionDropdown.setAdapter(adapter);
         multiSelectionDropdown.setTokenizer(new MultiAutoCompleteTextView.CommaTokenizer());
 
         multiSelectionDropdown.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 showMultiChoiceDialog();
+            }
+        });
+
+
+        contenedorVerdeIcon = ContextCompat.getDrawable(this, R.drawable.contenedor_verde);
+        contenedorAmarilloIcon = ContextCompat.getDrawable(this, R.drawable.contenedor_amarillo);
+        contenedorAzulIcon = ContextCompat.getDrawable(this, R.drawable.contenedor_azul);
+
+        contenedorVerde = BitmapDescriptorFactory.fromBitmap(drawableToBitmap(contenedorVerdeIcon));
+        contenedorAmarillo = BitmapDescriptorFactory.fromBitmap(drawableToBitmap(contenedorAmarilloIcon));
+        contenedorAzul = BitmapDescriptorFactory.fromBitmap(drawableToBitmap(contenedorAzulIcon));
+
+        distanceSpinner = findViewById(R.id.spinner);
+        distanceSpinner.setSelection(0);
+
+        distanceSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
+                String distanciaSeleccionada = distanceSpinner.getSelectedItem().toString();
+                switch (distanciaSeleccionada) {
+                    case "100 m":
+                        agregarMarcadores(new LatLng(39.586917, -0.336444), null,  null, 1);
+                        break;
+                    case "500 m":
+                        agregarMarcadores(new LatLng(39.586917, -0.336444), new LatLng(39.587528, -0.337778), null, 2);
+                        break;
+                    case "1 km":
+                        agregarMarcadores(new LatLng(39.586917, -0.336444), new LatLng(39.587528, -0.337778), new LatLng(39.590889, -0.343111), 3);
+                        break;
+                    default:
+                        break;
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parentView) {
+                // No se seleccionó nada en el Spinner
             }
         });
     }
@@ -232,5 +286,28 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         builder.setNegativeButton("Cancelar", null);
 
         builder.show();
+    }
+
+    // Agrega un marcador al mapa y elimina los marcadores anteriores si es necesario
+    private void agregarMarcadores(LatLng punto1, LatLng punto2, LatLng punto3, int seleccion) {
+        // Borra todos los marcadores existentes
+        mMap.clear();
+
+        // Agrega los marcadores según la selección del usuario
+        mMap.addMarker(new MarkerOptions().position(punto1).title("Contenedor verde").icon(contenedorVerde));
+        if (seleccion >= 2) {
+            mMap.addMarker(new MarkerOptions().position(punto2).title("Contenedor amarillo").icon(contenedorAmarillo));
+        }
+        if (seleccion == 3) {
+            mMap.addMarker(new MarkerOptions().position(punto3).title("Contenedor azul").icon(contenedorAzul));
+        }
+    }
+
+    private Bitmap drawableToBitmap(Drawable drawable) {
+        Bitmap bitmap = Bitmap.createBitmap(100, 100, Bitmap.Config.ARGB_8888);
+        Canvas canvas = new Canvas(bitmap);
+        drawable.setBounds(0, 0, canvas.getWidth(), canvas.getHeight());
+        drawable.draw(canvas);
+        return bitmap;
     }
 }

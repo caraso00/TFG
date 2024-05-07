@@ -3,10 +3,8 @@ package com.example.tfg.map;
 import android.Manifest;
 import android.app.Activity;
 import android.content.Context;
-import android.content.IntentSender;
 import android.content.pm.PackageManager;
 
-import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
