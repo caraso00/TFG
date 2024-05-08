@@ -46,6 +46,8 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationBarView;
 
+import java.lang.reflect.Array;
+import java.util.ArrayList;
 import java.util.Arrays;
 
 public class MapActivity extends AppCompatActivity implements OnMapReadyCallback {
@@ -58,15 +60,12 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     private Spinner distanceSpinner;
     private MultiAutoCompleteTextView multiSelectionDropdown;
     private MultiSelectArrayAdapter adapter;
-    private boolean[] selectedItems;
-    private final String[] items = {"Orgánico", "Papel y cartón", "Vidrio", "Papelera"};
-    private Marker punto1Marker;
-    private Marker punto2Marker;
-    private Marker punto3Marker;
+    private ArrayList<String> selectedItems;
+    private final ArrayList<String> items = new ArrayList<>(Arrays.asList("Orgánico", "Papel y cartón", "Vidrio", "Plástico"));
     private Drawable contenedorVerdeIcon;
     private Drawable contenedorAmarilloIcon;
     private Drawable contenedorAzulIcon;
-
+    private int distance;
     private BitmapDescriptor contenedorVerde;
     private BitmapDescriptor contenedorAmarillo;
     private BitmapDescriptor contenedorAzul;
@@ -128,8 +127,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
             }
         });
 
-        selectedItems = new boolean[items.length];
-        Arrays.fill(selectedItems, false);
+        selectedItems = new ArrayList<>();
         adapter = new MultiSelectArrayAdapter(this, android.R.layout.simple_list_item_multiple_choice, items);
         multiSelectionDropdown = findViewById(R.id.multiSelectionDropdown);
         multiSelectionDropdown.setTokenizer(new MultiAutoCompleteTextView.CommaTokenizer());
@@ -159,13 +157,16 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                 String distanciaSeleccionada = distanceSpinner.getSelectedItem().toString();
                 switch (distanciaSeleccionada) {
                     case "100 m":
-                        agregarMarcadores(new LatLng(39.586917, -0.336444), null,  null, 1);
+                        distance = 1;
+                        agregarMarcadores(new LatLng(39.586917, -0.336444), null,  null, distance);
                         break;
                     case "500 m":
-                        agregarMarcadores(new LatLng(39.586917, -0.336444), new LatLng(39.587528, -0.337778), null, 2);
+                        distance = 2;
+                        agregarMarcadores(new LatLng(39.586917, -0.336444), new LatLng(39.5895698, -0.3365235), null, distance);
                         break;
                     case "1 km":
-                        agregarMarcadores(new LatLng(39.586917, -0.336444), new LatLng(39.587528, -0.337778), new LatLng(39.590889, -0.343111), 3);
+                        distance = 3;
+                        agregarMarcadores(new LatLng(39.586917, -0.336444), new LatLng(39.5895698, -0.3365235), new LatLng(39.592216, -0.336297), distance);
                         break;
                     default:
                         break;
@@ -252,34 +253,39 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("Elija los tipos:");
 
-        builder.setMultiChoiceItems(items, selectedItems, new DialogInterface.OnMultiChoiceClickListener() {
+        boolean[] checkedItems = new boolean[items.size()];
+
+        // Inicializar checkedItems basado en los elementos seleccionados en selectedItems
+        for (int i = 0; i < items.size(); i++) {
+            checkedItems[i] = selectedItems.contains(items.get(i));
+        }
+
+        builder.setMultiChoiceItems(items.toArray(new String[0]), checkedItems, new DialogInterface.OnMultiChoiceClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which, boolean isChecked) {
-                selectedItems[which] = isChecked;
+                String selectedItem = items.get(which);
+                if (isChecked) {
+                    // Agregar el elemento seleccionado al ArrayList selectedItems
+                    selectedItems.add(selectedItem);
+                } else {
+                    // Remover el elemento deseleccionado del ArrayList selectedItems
+                    selectedItems.remove(selectedItem);
+                }
             }
         });
 
         builder.setPositiveButton("Aceptar", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
+                int countSelected = selectedItems.size();
                 String selections = "";
-                int countSelected = 0;
-                int lastIndex = -1;
-                for (int i = 0; i < items.length; i++) {
-                    if (selectedItems[i]) {
-                        countSelected++;
-                        lastIndex = i;
-                    }
-                }
-
-                if (countSelected == 0) {
-                    selections = "";
-                } else if (countSelected == 1) {
-                    selections = items[lastIndex];
-                } else {
+                if (countSelected == 1) {
+                    selections = selectedItems.get(0);
+                } if (countSelected > 1) {
                     selections = "Varios";
                 }
                 multiSelectionDropdown.setText(selections);
+                agregarMarcadores(new LatLng(39.586917, -0.336444), new LatLng(39.5895698, -0.3365235), new LatLng(39.592216, -0.336297), distance);
             }
         });
 
@@ -294,13 +300,18 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         mMap.clear();
 
         // Agrega los marcadores según la selección del usuario
-        mMap.addMarker(new MarkerOptions().position(punto1).title("Contenedor verde").icon(contenedorVerde));
-        if (seleccion >= 2) {
+        if (checkSelectedItems(selectedItems, "Orgánico"))mMap.addMarker(new MarkerOptions().position(punto1).title("Contenedor verde").icon(contenedorVerde));
+        if (checkSelectedItems(selectedItems,"Plástico") && seleccion >= 2) {
             mMap.addMarker(new MarkerOptions().position(punto2).title("Contenedor amarillo").icon(contenedorAmarillo));
         }
-        if (seleccion == 3) {
+        if (checkSelectedItems(selectedItems,"Papel y cartón") && seleccion == 3) {
             mMap.addMarker(new MarkerOptions().position(punto3).title("Contenedor azul").icon(contenedorAzul));
         }
+    }
+
+    private boolean checkSelectedItems(ArrayList<String> selectedItems, String item) {
+        if (selectedItems.size() == 0) return true;
+        return selectedItems.contains(item);
     }
 
     private Bitmap drawableToBitmap(Drawable drawable) {

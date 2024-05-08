@@ -11,10 +11,10 @@ public class MultiSelectArrayAdapter extends ArrayAdapter<String> {
     private ArrayList<String> items;
     private boolean[] itemChecked;
 
-    public MultiSelectArrayAdapter(Context context, int resource, String[] objects) {
+    public MultiSelectArrayAdapter(Context context, int resource, ArrayList<String> objects) {
         super(context, resource, objects);
         this.mContext = context;
-        this.items = new ArrayList<>(Arrays.asList(objects));
+        this.items = objects;
         itemChecked = new boolean[items.size()];
     }
 }
