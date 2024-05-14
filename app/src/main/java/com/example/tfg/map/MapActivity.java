@@ -12,6 +12,8 @@ import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.drawable.Drawable;
+import android.location.Address;
+import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationManager;
 import android.os.Bundle;
@@ -29,6 +31,8 @@ import androidx.core.content.ContextCompat;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.example.tfg.R;
+import com.example.tfg.binDetails.BinDetails;
+import com.example.tfg.binDetails.BinDetailsDialogFragment;
 import com.example.tfg.profile.ProfileActivity;
 import com.example.tfg.reportAdd.ReportActivity;
 import com.google.android.gms.location.FusedLocationProviderClient;
@@ -46,11 +50,14 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationBarView;
 
+import java.io.IOException;
 import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
+import java.util.Locale;
 
-public class MapActivity extends AppCompatActivity implements OnMapReadyCallback {
+public class MapActivity extends AppCompatActivity implements OnMapReadyCallback, GoogleMap.OnMarkerClickListener {
 
     private GoogleMap mMap;
     private FusedLocationProviderClient fusedLocationClient;
@@ -62,11 +69,11 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     private MultiSelectArrayAdapter adapter;
     private ArrayList<String> selectedItems;
     private final ArrayList<String> items = new ArrayList<>(Arrays.asList("Orgánico", "Papel y cartón", "Vidrio", "Plástico"));
-    private Drawable contenedorVerdeIcon;
+    private Drawable contenedorMarronIcon;
     private Drawable contenedorAmarilloIcon;
     private Drawable contenedorAzulIcon;
     private int distance;
-    private BitmapDescriptor contenedorVerde;
+    private BitmapDescriptor contenedorMarron;
     private BitmapDescriptor contenedorAmarillo;
     private BitmapDescriptor contenedorAzul;
 
@@ -140,11 +147,11 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         });
 
 
-        contenedorVerdeIcon = ContextCompat.getDrawable(this, R.drawable.contenedor_verde);
+        contenedorMarronIcon = ContextCompat.getDrawable(this, R.drawable.contenedor_marron);
         contenedorAmarilloIcon = ContextCompat.getDrawable(this, R.drawable.contenedor_amarillo);
         contenedorAzulIcon = ContextCompat.getDrawable(this, R.drawable.contenedor_azul);
 
-        contenedorVerde = BitmapDescriptorFactory.fromBitmap(drawableToBitmap(contenedorVerdeIcon));
+        contenedorMarron = BitmapDescriptorFactory.fromBitmap(drawableToBitmap(contenedorMarronIcon));
         contenedorAmarillo = BitmapDescriptorFactory.fromBitmap(drawableToBitmap(contenedorAmarilloIcon));
         contenedorAzul = BitmapDescriptorFactory.fromBitmap(drawableToBitmap(contenedorAzulIcon));
 
@@ -218,6 +225,20 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         } else {
             viewModel.checkAndRequestPermissions(this);
         }
+
+        mMap.setOnMarkerClickListener(this);
+    }
+
+    @Override
+    public boolean onMarkerClick(Marker marker) {
+        // Obtén los detalles del contenedor desde el marcador
+        BinDetails contenedor = (BinDetails) marker.getTag();
+        if (contenedor != null) {
+            // Muestra el DialogFragment con los detalles del contenedor
+            BinDetailsDialogFragment dialogFragment = BinDetailsDialogFragment.newInstance(contenedor);
+            dialogFragment.show(getSupportFragmentManager(), "contenedorDetails");
+        }
+        return true; // Devuelve true para indicar que hemos manejado el clic
     }
 
     private void getDeviceLocation() {
@@ -300,12 +321,29 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         mMap.clear();
 
         // Agrega los marcadores según la selección del usuario
-        if (checkSelectedItems(selectedItems, "Orgánico"))mMap.addMarker(new MarkerOptions().position(punto1).title("Contenedor verde").icon(contenedorVerde));
+        if (checkSelectedItems(selectedItems, "Orgánico")) {
+            BinDetails details = new BinDetails("Contenedor marrón", showAddressFromLocation(punto1.latitude, punto1.longitude), "Orgánico", "Bueno", R.drawable.contenedor_marron);
+            Marker marker = mMap.addMarker(new MarkerOptions()
+                    .position(punto1)
+                    .title("Contenedor marrón")
+                    .icon(contenedorMarron));
+            marker.setTag(details);
+        }
         if (checkSelectedItems(selectedItems,"Plástico") && seleccion >= 2) {
-            mMap.addMarker(new MarkerOptions().position(punto2).title("Contenedor amarillo").icon(contenedorAmarillo));
+            BinDetails details = new BinDetails("Contenedor amarillo", showAddressFromLocation(punto2.latitude, punto2.longitude), "Plástico", "Perfecto", R.drawable.contenedor_amarillo);
+            Marker marker = mMap.addMarker(new MarkerOptions()
+                    .position(punto2)
+                    .title("Contenedor amarillo")
+                    .icon(contenedorAmarillo));
+            marker.setTag(details);
         }
         if (checkSelectedItems(selectedItems,"Papel y cartón") && seleccion == 3) {
-            mMap.addMarker(new MarkerOptions().position(punto3).title("Contenedor azul").icon(contenedorAzul));
+            BinDetails details = new BinDetails("Contenedor amarillo", showAddressFromLocation(punto3.latitude, punto3.longitude), "Papel y cartón", "Sucio", R.drawable.contenedor_azul);
+            Marker marker = mMap.addMarker(new MarkerOptions()
+                    .position(punto3)
+                    .title("Contenedor azul")
+                    .icon(contenedorAzul));
+            marker.setTag(details);
         }
     }
 
@@ -320,5 +358,37 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         drawable.setBounds(0, 0, canvas.getWidth(), canvas.getHeight());
         drawable.draw(canvas);
         return bitmap;
+    }
+
+    private String showAddressFromLocation(double latitude, double longitude) {
+        Geocoder geocoder = new Geocoder(this, Locale.getDefault());
+        try {
+            List<Address> addresses = geocoder.getFromLocation(latitude, longitude, 1);
+            if (addresses != null && !addresses.isEmpty()) {
+                Address address = addresses.get(0);
+                StringBuilder addressBuilder = new StringBuilder();
+
+                // Obtener la calle y el número de la dirección
+                if (address.getThoroughfare() != null) {
+                    addressBuilder.append(address.getThoroughfare());
+                    if (address.getSubThoroughfare() != null) {
+                        addressBuilder.append(", ").append(address.getSubThoroughfare());
+                    }
+                }
+
+                // Obtener la localidad de la dirección
+                if (address.getLocality() != null) {
+                    if (addressBuilder.length() > 0) {
+                        addressBuilder.append(", ");
+                    }
+                    addressBuilder.append(address.getLocality());
+                }
+
+                return addressBuilder.toString();
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return "";
     }
 }
