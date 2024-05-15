@@ -1,5 +1,6 @@
 package com.example.tfg.binDetails;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,6 +13,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 
 import com.example.tfg.R;
+import com.example.tfg.reportMod.ReportModActivity;
 
 public class BinDetailsDialogFragment extends DialogFragment {
 
@@ -47,11 +49,46 @@ public class BinDetailsDialogFragment extends DialogFragment {
 
             TextView statusUi = view.findViewById(R.id.dialog_info_status);
             statusUi.setText(bin.getEstado());
+
+            ImageView modIcon = view.findViewById(R.id.mod_icon);
+            modIcon.setOnClickListener(v -> {
+                Intent intent = new Intent(getActivity(), ReportModActivity.class);
+                intent.putExtra("ubicacion", bin.getUbicacion());
+                intent.putExtra("tipoSelected", getTipo(bin.getTipo()));  // Replace with actual selected index
+                intent.putExtra("estadoSelected", getEstado(bin.getEstado()));  // Replace with actual selected index
+                startActivity(intent);
+            });
         }
 
         ImageView closeIcon = view.findViewById(R.id.close_icon);
         closeIcon.setOnClickListener(v -> dismiss());
 
         return view;
+    }
+
+    private int getTipo(String tipo) {
+        switch (tipo) {
+            case ("Orgánico"):
+                return 0;
+            case ("Plástico"):
+                return 1;
+            case ("Papel y cartón"):
+                return 2;
+            default:
+                return 3;
+        }
+    }
+
+    private int getEstado(String estado) {
+        switch (estado) {
+            case ("Perfecto"):
+                return 0;
+            case ("Bien"):
+                return 1;
+            case ("Sucio"):
+                return 2;
+            default:
+                return 3;
+        }
     }
 }

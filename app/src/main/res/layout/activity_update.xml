@@ -17,16 +17,105 @@
 
     </com.google.android.material.navigation.NavigationView>
 
+    <TextView
+        android:id="@+id/ubiReportTextView"
+        android:layout_width="373dp"
+        android:layout_height="24dp"
+        android:layout_marginStart="4dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="4dp"
+        android:text="Ubicación"
+        android:textAlignment="center"
+        android:textColor="#000000"
+        android:textSize="20sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/selectLocationButton"
+        tools:ignore="MissingConstraints" />
+
     <ImageView
         android:id="@+id/addPhotoImageView"
-        android:layout_width="295dp"
-        android:layout_height="144dp"
-        android:layout_marginTop="20dp"
+        android:layout_width="240dp"
+        android:layout_height="137dp"
+        android:layout_marginTop="156dp"
         android:clickable="true"
         android:contentDescription="@string/description_add_photo"
         android:focusable="true"
         android:src="@drawable/asgasgka0psigasg"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/navigationView2" />
+
+    <Spinner
+        android:id="@+id/estadoSpinner"
+        android:layout_width="152dp"
+        android:layout_height="53dp"
+        android:layout_marginTop="4dp"
+        android:entries="@array/status_options"
+        app:layout_constraintHorizontal_bias="0.135"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/estadoSpinnerTitle" />
+
+    <Spinner
+        android:id="@+id/motivoSpinner"
+        android:layout_width="172dp"
+        android:layout_height="53dp"
+        android:layout_marginTop="4dp"
+        android:entries="@array/motivo_options"
+        app:layout_constraintHorizontal_bias="0.527"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/motivoContenedor" />
+
+    <Button
+        android:id="@+id/selectLocationButton"
+        android:layout_width="225dp"
+        android:layout_height="38dp"
+        android:layout_marginTop="220dp"
+        android:text="Seleccionar Ubicación"
+        app:layout_constraintHorizontal_bias="0.521"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/modText" />
+
+    <Spinner
+        android:id="@+id/tipoSpinner"
+        android:layout_width="141dp"
+        android:layout_height="53dp"
+        android:layout_marginTop="4dp"
+        android:entries="@array/type_options"
+        app:layout_constraintHorizontal_bias="0.129"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tipoContenedor" />
+
+    <TextView
+        android:id="@+id/tipoContenedor"
+        android:layout_width="156dp"
+        android:layout_height="36dp"
+        android:layout_marginTop="184dp"
+        android:text="Tipo:"
+        android:textAlignment="center"
+        android:textColor="#000000"
+        android:textSize="24sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.073"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/navigationView2" />
+
+    <TextView
+        android:id="@+id/estadoSpinnerTitle"
+        android:layout_width="152dp"
+        android:layout_height="37dp"
+        android:layout_marginTop="184dp"
+        android:text="Estado:"
+        android:textAlignment="center"
+        android:textColor="#000000"
+        android:textSize="24sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.085"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/navigationView2" />
 
@@ -39,25 +128,8 @@
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/back" />
 
-    <com.google.android.material.bottomnavigation.BottomNavigationView
-        android:id="@+id/navigation"
-        android:layout_width="412dp"
-        android:layout_height="82dp"
-        android:layout_marginTop="5dp"
-        android:background="#000000"
-        app:itemIconTint="@color/white"
-        app:itemTextColor="#FFFFFF"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.515"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintVertical_bias="1.0"
-        app:menu="@menu/bottom_navigation_menu">
-
-    </com.google.android.material.bottomnavigation.BottomNavigationView>
-
     <TextView
-        android:id="@+id/registerText"
+        android:id="@+id/modText"
         android:layout_width="406dp"
         android:layout_height="48dp"
         android:layout_marginStart="10dp"
@@ -74,68 +146,58 @@
         app:layout_constraintTop_toTopOf="parent"
         tools:ignore="MissingConstraints" />
 
-    <Button
-        android:id="@+id/selectLocationButton"
-        android:layout_width="288dp"
-        android:layout_height="52dp"
-        android:layout_marginTop="240dp"
-        android:text="Seleccionar Ubicación"
-        app:layout_constraintHorizontal_bias="0.495"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/registerText" />
-
-    <Spinner
-        android:id="@+id/motivoSpinner"
-        android:layout_width="172dp"
-        android:layout_height="53dp"
-        android:layout_marginTop="8dp"
-        android:entries="@array/motivo_options"
-        app:layout_constraintHorizontal_bias="0.506"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/estadoContenedor" />
-
     <TextView
-        android:id="@+id/estadoContenedor"
-        android:layout_width="192dp"
-        android:layout_height="37dp"
-        android:layout_marginTop="12dp"
+        android:id="@+id/motivoContenedor"
+        android:layout_width="194dp"
+        android:layout_height="52dp"
+        android:layout_marginTop="30dp"
         android:text="Motivo:"
         android:textAlignment="center"
         android:textColor="#000000"
-        android:textSize="24sp"
+        android:textSize="34sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.497"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/selectLocationButton" />
+        app:layout_constraintTop_toBottomOf="@+id/navigationView2" />
 
     <Button
         android:id="@+id/aceptarButton"
         android:layout_width="323dp"
         android:layout_height="46dp"
         android:layout_marginLeft="44dp"
-        android:layout_marginTop="500dp"
+        android:layout_marginTop="580dp"
         android:text="Enviar solicitud"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/navigationView2"
         tools:ignore="MissingConstraints" />
 
-    <TextView
+    <EditText
         android:id="@+id/commentsText"
-        android:layout_width="348dp"
-        android:layout_height="86dp"
+        android:layout_width="349dp"
+        android:layout_height="134dp"
         android:layout_marginStart="30dp"
         android:layout_marginEnd="30dp"
-        android:layout_marginBottom="18dp"
+        android:layout_marginBottom="104dp"
         android:background="@drawable/border_background"
         android:breakStrategy="high_quality"
+        android:hint="Explica brevemente el motivo..."
         android:padding="10dp"
-        android:text="Comentarios"
         android:textColor="#8A8585"
         app:layout_constraintBottom_toTopOf="@+id/aceptarButton"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
+
+    <TextView
+        android:id="@+id/imageCountTextView"
+        android:layout_width="237dp"
+        android:layout_height="18dp"
+        android:layout_marginTop="5dp"
+        android:text="Imágenes: 0/2"
+        android:textAlignment="center"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.982"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/addPhotoImageView" />
 
     <TextView
         android:id="@+id/obligatorio"
