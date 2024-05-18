@@ -9,7 +9,7 @@ public class BinDetails implements Serializable {
     private String tipo;
     private String estado;
     private int imagenResId;
-    private int iconoResId;
+
 
     public BinDetails(String titulo, String ubicacion, String tipo, String estado, int imagenResId) {
         this.titulo = titulo;

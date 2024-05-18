@@ -7,6 +7,10 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.IntentSender;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.drawable.Drawable;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
@@ -14,16 +18,21 @@ import android.location.LocationManager;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.example.tfg.R;
 import com.example.tfg.adminPanel.AdminPanelActivity;
 import com.example.tfg.adminProfile.AdminProfileActivity;
+import com.example.tfg.binDetails.BinDetails;
 import com.example.tfg.reportTemp.ReportTempActivity;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
@@ -31,23 +40,42 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptor;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.maps.model.PolylineOptions;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationBarView;
+import com.google.maps.model.DirectionsLeg;
+import com.google.maps.model.DirectionsResult;
+import com.google.maps.model.DirectionsRoute;
+import com.google.maps.model.DirectionsStep;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
-public class RouteActivity extends AppCompatActivity implements OnMapReadyCallback {
+public class RouteActivity extends AppCompatActivity implements OnMapReadyCallback, GoogleMap.OnMarkerClickListener {
 
     private RouteViewModel viewModel;
     private GoogleMap mMap;
     private LatLng selectedLatLng;
-    private TextView ubiTextView;
     private static final int REQUEST_CHECK_SETTINGS = 1;
+    private Button addToRouteButton;
+    private LinearLayout selectedBinsLayout;
+    private List<BinDetails> selectedBins = new ArrayList<>();
+    private List<LatLng> routePoints = new ArrayList<>();
+    private Drawable contenedorMarronIcon;
+    private Drawable contenedorAmarilloIcon;
+    private Drawable contenedorAzulIcon;
+    private BitmapDescriptor contenedorMarron;
+    private BitmapDescriptor contenedorAmarillo;
+    private BitmapDescriptor contenedorAzul;
+    private Marker selectedMarker;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,8 +85,8 @@ public class RouteActivity extends AppCompatActivity implements OnMapReadyCallba
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
 
-        ubiTextView = findViewById(R.id.ubiTextViewRoute);
-
+        addToRouteButton = findViewById(R.id.addToRouteButton);
+        selectedBinsLayout = findViewById(R.id.selectedBinsLayout);
 
         viewModel = new ViewModelProvider(this).get(RouteViewModel.class);
 
@@ -103,6 +131,28 @@ public class RouteActivity extends AppCompatActivity implements OnMapReadyCallba
                 sendEx.printStackTrace();
             }
         });
+
+        addToRouteButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (selectedMarker != null) {
+                    LatLng selectedLatLng = selectedMarker.getPosition(); // Obtenemos la posición del marcador seleccionado
+                    String address = getAddressFromLocation(selectedLatLng.latitude, selectedLatLng.longitude); // Obtenemos la dirección correspondiente a la posición
+
+                    BinDetails binDetails = new BinDetails(selectedMarker.getTitle(), address, "Tipo", "Estado",R.drawable.ic_launcher_foreground);
+
+                    selectedBins.add(binDetails); // Añadimos los detalles del contenedor a la lista seleccionada
+                    addBinToLayout(binDetails); // Agregamos el contenedor al diseño
+                    routePoints.add(selectedLatLng);
+
+                    //  Hay que pagar y lo va a hacer tu padre
+                    //drawRoute(); // Dibujamos la ruta en el mapa
+
+                    selectedMarker = null; // Reiniciamos después de añadir a la ruta
+                    addToRouteButton.setEnabled(false); // Ocultamos el botón después de añadir a la ruta
+                }
+            }
+        });
     }
 
     private BroadcastReceiver locationProviderChangeReceiver = new BroadcastReceiver() {
@@ -143,15 +193,16 @@ public class RouteActivity extends AppCompatActivity implements OnMapReadyCallba
             viewModel.checkAndRequestPermissions(this);
         }
 
-        mMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
-            @Override
-            public void onMapClick(LatLng latLng) {
-                mMap.clear(); // Limpiar marcadores anteriores
-                mMap.addMarker(new MarkerOptions().position(latLng)); // Agregar marcador en la ubicación del clic
-                selectedLatLng = latLng; // Guardar las coordenadas seleccionadas
-                showAddressFromLocation(selectedLatLng.latitude, selectedLatLng.longitude); // Mostrar dirección correspondiente a las coordenadas
-            }
-        });
+        setupMap();
+        mMap.setOnMarkerClickListener(this);
+    }
+
+    @Override
+    public boolean onMarkerClick(Marker marker) {
+        Log.d("MarkerClick", "Marker clicked: " + marker.getPosition().toString());
+        addToRouteButton.setEnabled(true);
+        selectedMarker = marker; // Guardar el marcador seleccionado
+        return true; // Devolver true para indicar que hemos manejado el clic
     }
 
     private void getDeviceLocation() {
@@ -167,10 +218,23 @@ public class RouteActivity extends AppCompatActivity implements OnMapReadyCallba
                 if (location != null && mMap != null) {
                     LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
                     mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 19f));
-                    Log.d("Zoom", "Haciendo zoom");
                 }
             }
         });
+    }
+
+    private void setupMap() {
+        contenedorMarronIcon = ContextCompat.getDrawable(this, R.drawable.contenedor_marron);
+        contenedorAmarilloIcon = ContextCompat.getDrawable(this, R.drawable.contenedor_amarillo);
+        contenedorAzulIcon = ContextCompat.getDrawable(this, R.drawable.contenedor_azul);
+
+        contenedorMarron = BitmapDescriptorFactory.fromBitmap(drawableToBitmap(contenedorMarronIcon));
+        contenedorAmarillo = BitmapDescriptorFactory.fromBitmap(drawableToBitmap(contenedorAmarilloIcon));
+        contenedorAzul = BitmapDescriptorFactory.fromBitmap(drawableToBitmap(contenedorAzulIcon));
+
+        mMap.addMarker(new MarkerOptions().position(new LatLng(39.586917, -0.336444)).title("Contenedor marrón").icon(contenedorMarron));
+        mMap.addMarker(new MarkerOptions().position(new LatLng(39.5895698, -0.3365235)).title("Contenedor amarillo").icon(contenedorAmarillo));
+        mMap.addMarker(new MarkerOptions().position(new LatLng(39.592216, -0.336297)).title("Contenedor azul").icon(contenedorAzul));
     }
 
     // Mostrar la dirección correspondiente a las coordenadas en el TextView
@@ -197,12 +261,73 @@ public class RouteActivity extends AppCompatActivity implements OnMapReadyCallba
                     }
                     addressBuilder.append(address.getLocality());
                 }
-
-                // Mostrar la dirección en el TextView
-                ubiTextView.setText(addressBuilder.toString());
             }
         } catch (IOException e) {
             e.printStackTrace();
+        }
+    }
+
+    private Bitmap drawableToBitmap(Drawable drawable) {
+        Bitmap bitmap = Bitmap.createBitmap(100, 100, Bitmap.Config.ARGB_8888);
+        Canvas canvas = new Canvas(bitmap);
+        drawable.setBounds(0, 0, canvas.getWidth(), canvas.getHeight());
+        drawable.draw(canvas);
+        return bitmap;
+    }
+
+    // Obtener la dirección correspondiente a las coordenadas
+    private String getAddressFromLocation(double latitude, double longitude) {
+        Geocoder geocoder = new Geocoder(this, Locale.getDefault());
+        try {
+            List<Address> addresses = geocoder.getFromLocation(latitude, longitude, 1);
+            if (!addresses.isEmpty()) {
+                Address address = addresses.get(0);
+                return address.getAddressLine(0);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return "Dirección no disponible";
+    }
+
+    // Agregar detalles del contenedor al LinearLayout
+    private void addBinToLayout(BinDetails binDetails) {
+        TextView binTextView = new TextView(this);
+        binTextView.setText(String.format("%s: %s", binDetails.getTitulo(), binDetails.getUbicacion()));
+        selectedBinsLayout.addView(binTextView);
+    }
+
+    private void drawRoute() {
+        if (mMap != null && routePoints.size() >= 2) {
+            List<com.google.maps.model.LatLng> waypoints = new ArrayList<>(routePoints.size());
+            for (LatLng point : routePoints) {
+                waypoints.add(new com.google.maps.model.LatLng(point.latitude, point.longitude));
+            }
+
+            try {
+                DirectionsResult result = DirectionsHelper.getDirections(waypoints.get(0), waypoints.get(waypoints.size() - 1));
+                if (result != null) {
+                    List<LatLng> path = new ArrayList<>();
+                    for (DirectionsRoute route : result.routes) {
+                        for (DirectionsLeg leg : route.legs) {
+                            for (DirectionsStep step : leg.steps) {
+                                for (com.google.maps.model.LatLng point : step.polyline.decodePath()) {
+                                    path.add(new LatLng(point.lat, point.lng));
+                                }
+                            }
+                        }
+                    }
+
+                    // Añadir polilínea al mapa
+                    PolylineOptions polylineOptions = new PolylineOptions()
+                            .addAll(path)
+                            .width(5) // Ancho de la línea en píxeles
+                            .color(Color.RED); // Color de la línea
+                    mMap.addPolyline(polylineOptions);
+                }
+             } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
     }
 }
