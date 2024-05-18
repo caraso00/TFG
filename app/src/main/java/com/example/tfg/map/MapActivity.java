@@ -9,21 +9,30 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.IntentSender;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.Canvas;
+import android.graphics.drawable.Drawable;
+import android.location.Address;
+import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.MultiAutoCompleteTextView;
 import android.widget.Spinner;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.example.tfg.R;
+import com.example.tfg.binDetails.BinDetails;
+import com.example.tfg.binDetails.BinDetailsDialogFragment;
 import com.example.tfg.profile.ProfileActivity;
 import com.example.tfg.reportAdd.ReportActivity;
 import com.google.android.gms.location.FusedLocationProviderClient;
@@ -32,14 +41,23 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptor;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
+import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationBarView;
 
+import java.io.IOException;
+import java.lang.reflect.Array;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
+import java.util.Locale;
 
-public class MapActivity extends AppCompatActivity implements OnMapReadyCallback {
+public class MapActivity extends AppCompatActivity implements OnMapReadyCallback, GoogleMap.OnMarkerClickListener {
 
     private GoogleMap mMap;
     private FusedLocationProviderClient fusedLocationClient;
@@ -49,8 +67,15 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     private Spinner distanceSpinner;
     private MultiAutoCompleteTextView multiSelectionDropdown;
     private MultiSelectArrayAdapter adapter;
-    private boolean[] selectedItems;
-    private final String[] items = {"Orgánico", "Papel y cartón", "Vidrio", "Papelera"};
+    private ArrayList<String> selectedItems;
+    private final ArrayList<String> items = new ArrayList<>(Arrays.asList("Orgánico", "Papel y cartón", "Vidrio", "Plástico"));
+    private Drawable contenedorMarronIcon;
+    private Drawable contenedorAmarilloIcon;
+    private Drawable contenedorAzulIcon;
+    private int distance;
+    private BitmapDescriptor contenedorMarron;
+    private BitmapDescriptor contenedorAmarillo;
+    private BitmapDescriptor contenedorAzul;
 
     private static final int REQUEST_CHECK_SETTINGS = 2;
     private static final int LOCATION_PERMISSION_REQUEST_CODE = 1;
@@ -91,7 +116,6 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
             }
         });
 
-        distanceSpinner = findViewById(R.id.spinner);
 
         viewModel.getLocationSettingResponse().observe(this, isLocationSettingSatisfied -> {
             if (Boolean.TRUE.equals(isLocationSettingSatisfied)) {
@@ -110,17 +134,55 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
             }
         });
 
-        selectedItems = new boolean[items.length];
-        Arrays.fill(selectedItems, false);
+        selectedItems = new ArrayList<>();
         adapter = new MultiSelectArrayAdapter(this, android.R.layout.simple_list_item_multiple_choice, items);
         multiSelectionDropdown = findViewById(R.id.multiSelectionDropdown);
-        multiSelectionDropdown.setAdapter(adapter);
         multiSelectionDropdown.setTokenizer(new MultiAutoCompleteTextView.CommaTokenizer());
 
         multiSelectionDropdown.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 showMultiChoiceDialog();
+            }
+        });
+
+
+        contenedorMarronIcon = ContextCompat.getDrawable(this, R.drawable.contenedor_marron);
+        contenedorAmarilloIcon = ContextCompat.getDrawable(this, R.drawable.contenedor_amarillo);
+        contenedorAzulIcon = ContextCompat.getDrawable(this, R.drawable.contenedor_azul);
+
+        contenedorMarron = BitmapDescriptorFactory.fromBitmap(drawableToBitmap(contenedorMarronIcon));
+        contenedorAmarillo = BitmapDescriptorFactory.fromBitmap(drawableToBitmap(contenedorAmarilloIcon));
+        contenedorAzul = BitmapDescriptorFactory.fromBitmap(drawableToBitmap(contenedorAzulIcon));
+
+        distanceSpinner = findViewById(R.id.spinner);
+        distanceSpinner.setSelection(0);
+
+        distanceSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
+                String distanciaSeleccionada = distanceSpinner.getSelectedItem().toString();
+                switch (distanciaSeleccionada) {
+                    case "100 m":
+                        distance = 1;
+                        agregarMarcadores(new LatLng(39.586917, -0.336444), null,  null, distance);
+                        break;
+                    case "500 m":
+                        distance = 2;
+                        agregarMarcadores(new LatLng(39.586917, -0.336444), new LatLng(39.5895698, -0.3365235), null, distance);
+                        break;
+                    case "1 km":
+                        distance = 3;
+                        agregarMarcadores(new LatLng(39.586917, -0.336444), new LatLng(39.5895698, -0.3365235), new LatLng(39.592216, -0.336297), distance);
+                        break;
+                    default:
+                        break;
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parentView) {
+                // No se seleccionó nada en el Spinner
             }
         });
     }
@@ -163,6 +225,20 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         } else {
             viewModel.checkAndRequestPermissions(this);
         }
+
+        mMap.setOnMarkerClickListener(this);
+    }
+
+    @Override
+    public boolean onMarkerClick(Marker marker) {
+        // Obtén los detalles del contenedor desde el marcador
+        BinDetails contenedor = (BinDetails) marker.getTag();
+        if (contenedor != null) {
+            // Muestra el DialogFragment con los detalles del contenedor
+            BinDetailsDialogFragment dialogFragment = BinDetailsDialogFragment.newInstance(contenedor);
+            dialogFragment.show(getSupportFragmentManager(), "contenedorDetails");
+        }
+        return true; // Devuelve true para indicar que hemos manejado el clic
     }
 
     private void getDeviceLocation() {
@@ -198,39 +274,121 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("Elija los tipos:");
 
-        builder.setMultiChoiceItems(items, selectedItems, new DialogInterface.OnMultiChoiceClickListener() {
+        boolean[] checkedItems = new boolean[items.size()];
+
+        // Inicializar checkedItems basado en los elementos seleccionados en selectedItems
+        for (int i = 0; i < items.size(); i++) {
+            checkedItems[i] = selectedItems.contains(items.get(i));
+        }
+
+        builder.setMultiChoiceItems(items.toArray(new String[0]), checkedItems, new DialogInterface.OnMultiChoiceClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which, boolean isChecked) {
-                selectedItems[which] = isChecked;
+                String selectedItem = items.get(which);
+                if (isChecked) {
+                    // Agregar el elemento seleccionado al ArrayList selectedItems
+                    selectedItems.add(selectedItem);
+                } else {
+                    // Remover el elemento deseleccionado del ArrayList selectedItems
+                    selectedItems.remove(selectedItem);
+                }
             }
         });
 
         builder.setPositiveButton("Aceptar", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
+                int countSelected = selectedItems.size();
                 String selections = "";
-                int countSelected = 0;
-                int lastIndex = -1;
-                for (int i = 0; i < items.length; i++) {
-                    if (selectedItems[i]) {
-                        countSelected++;
-                        lastIndex = i;
-                    }
-                }
-
-                if (countSelected == 0) {
-                    selections = "";
-                } else if (countSelected == 1) {
-                    selections = items[lastIndex];
-                } else {
+                if (countSelected == 1) {
+                    selections = selectedItems.get(0);
+                } if (countSelected > 1) {
                     selections = "Varios";
                 }
                 multiSelectionDropdown.setText(selections);
+                agregarMarcadores(new LatLng(39.586917, -0.336444), new LatLng(39.5895698, -0.3365235), new LatLng(39.592216, -0.336297), distance);
             }
         });
 
         builder.setNegativeButton("Cancelar", null);
 
         builder.show();
+    }
+
+    // Agrega un marcador al mapa y elimina los marcadores anteriores si es necesario
+    private void agregarMarcadores(LatLng punto1, LatLng punto2, LatLng punto3, int seleccion) {
+        // Borra todos los marcadores existentes
+        mMap.clear();
+
+        // Agrega los marcadores según la selección del usuario
+        if (checkSelectedItems(selectedItems, "Orgánico")) {
+            BinDetails details = new BinDetails("Contenedor marrón", showAddressFromLocation(punto1.latitude, punto1.longitude), "Orgánico", "Bueno", R.drawable.contenedor_marron);
+            Marker marker = mMap.addMarker(new MarkerOptions()
+                    .position(punto1)
+                    .title("Contenedor marrón")
+                    .icon(contenedorMarron));
+            marker.setTag(details);
+        }
+        if (checkSelectedItems(selectedItems,"Plástico") && seleccion >= 2) {
+            BinDetails details = new BinDetails("Contenedor amarillo", showAddressFromLocation(punto2.latitude, punto2.longitude), "Plástico", "Perfecto", R.drawable.contenedor_amarillo);
+            Marker marker = mMap.addMarker(new MarkerOptions()
+                    .position(punto2)
+                    .title("Contenedor amarillo")
+                    .icon(contenedorAmarillo));
+            marker.setTag(details);
+        }
+        if (checkSelectedItems(selectedItems,"Papel y cartón") && seleccion == 3) {
+            BinDetails details = new BinDetails("Contenedor amarillo", showAddressFromLocation(punto3.latitude, punto3.longitude), "Papel y cartón", "Sucio", R.drawable.contenedor_azul);
+            Marker marker = mMap.addMarker(new MarkerOptions()
+                    .position(punto3)
+                    .title("Contenedor azul")
+                    .icon(contenedorAzul));
+            marker.setTag(details);
+        }
+    }
+
+    private boolean checkSelectedItems(ArrayList<String> selectedItems, String item) {
+        if (selectedItems.size() == 0) return true;
+        return selectedItems.contains(item);
+    }
+
+    private Bitmap drawableToBitmap(Drawable drawable) {
+        Bitmap bitmap = Bitmap.createBitmap(100, 100, Bitmap.Config.ARGB_8888);
+        Canvas canvas = new Canvas(bitmap);
+        drawable.setBounds(0, 0, canvas.getWidth(), canvas.getHeight());
+        drawable.draw(canvas);
+        return bitmap;
+    }
+
+    private String showAddressFromLocation(double latitude, double longitude) {
+        Geocoder geocoder = new Geocoder(this, Locale.getDefault());
+        try {
+            List<Address> addresses = geocoder.getFromLocation(latitude, longitude, 1);
+            if (addresses != null && !addresses.isEmpty()) {
+                Address address = addresses.get(0);
+                StringBuilder addressBuilder = new StringBuilder();
+
+                // Obtener la calle y el número de la dirección
+                if (address.getThoroughfare() != null) {
+                    addressBuilder.append(address.getThoroughfare());
+                    if (address.getSubThoroughfare() != null) {
+                        addressBuilder.append(", ").append(address.getSubThoroughfare());
+                    }
+                }
+
+                // Obtener la localidad de la dirección
+                if (address.getLocality() != null) {
+                    if (addressBuilder.length() > 0) {
+                        addressBuilder.append(", ");
+                    }
+                    addressBuilder.append(address.getLocality());
+                }
+
+                return addressBuilder.toString();
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return "";
     }
 }
