@@ -1,11 +1,14 @@
 package com.example.tfg.binDetails;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.RatingBar;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -14,10 +17,14 @@ import androidx.fragment.app.DialogFragment;
 
 import com.example.tfg.R;
 import com.example.tfg.reportMod.ReportModActivity;
+import com.google.android.material.snackbar.Snackbar;
 
 public class BinDetailsDialogFragment extends DialogFragment {
 
     private static final String ARG_BIN = "bin";
+    private RatingBar newRatingBar;
+    private float newRatingValue;
+    private TextView dialog_ur_rating_value;
 
     public static BinDetailsDialogFragment newInstance(BinDetails bin) {
         BinDetailsDialogFragment fragment = new BinDetailsDialogFragment();
@@ -50,6 +57,22 @@ public class BinDetailsDialogFragment extends DialogFragment {
             TextView statusUi = view.findViewById(R.id.dialog_info_status);
             statusUi.setText(bin.getEstado());
 
+            RatingBar currentRatingVar = view.findViewById(R.id.dialog_current_rating_bar);
+            TextView currentRatingValue = view.findViewById(R.id.dialog_current_rating_value);
+            currentRatingVar.setRating(bin.getRating());
+            currentRatingValue.setText(String.valueOf(bin.getRating()));
+
+            newRatingBar = view.findViewById(R.id.dialog_new_rating_bar);
+            dialog_ur_rating_value = view.findViewById(R.id.dialog_ur_rating_value);
+            newRatingBar.setOnRatingBarChangeListener(new RatingBar.OnRatingBarChangeListener() {
+                @Override
+                public void onRatingChanged(RatingBar ratingBar, float rating, boolean fromUser) {
+                    if (fromUser) {
+                        showRatingConfirmationDialog(rating);
+                    }
+                }
+            });
+
             ImageView modIcon = view.findViewById(R.id.mod_icon);
             modIcon.setOnClickListener(v -> {
                 Intent intent = new Intent(getActivity(), ReportModActivity.class);
@@ -64,6 +87,26 @@ public class BinDetailsDialogFragment extends DialogFragment {
         closeIcon.setOnClickListener(v -> dismiss());
 
         return view;
+    }
+
+    private void showRatingConfirmationDialog(float rating) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+        builder.setMessage("Quiere valorar el contenedor?")
+            .setPositiveButton("Aceptar", new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int id) {
+                    newRatingValue = rating;
+                    newRatingBar.setRating(newRatingValue);
+                    dialog_ur_rating_value.setText(String.valueOf(newRatingValue));
+                    newRatingBar.setIsIndicator(true);
+                    Snackbar.make(getView(), "Valoración registrada", Snackbar.LENGTH_SHORT).show();
+                }
+            })
+            .setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int id) {
+                    newRatingBar.setRating(0);
+                }
+            });
+        builder.create().show();
     }
 
     private int getTipo(String tipo) {

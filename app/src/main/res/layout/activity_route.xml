@@ -20,14 +20,14 @@
     <fragment
         android:id="@+id/map"
         android:name="com.google.android.gms.maps.SupportMapFragment"
-        android:layout_width="414dp"
-        android:layout_height="399dp"
+        android:layout_width="413dp"
+        android:layout_height="360dp"
         android:layout_marginBottom="5dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.253"
+        app:layout_constraintVertical_bias="0.199"
         tools:ignore="MissingConstraints"
-        tools:layout_editor_absoluteX="-2dp" />
+        tools:layout_editor_absoluteX="-3dp" />
 
     <Button
         android:id="@+id/addToRouteButton"
@@ -41,14 +41,13 @@
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/binsRecyclerView"
-        android:layout_width="400dp"
-        android:layout_height="153dp"
-        android:layout_marginBottom="83dp"
+        android:layout_width="401dp"
+        android:layout_height="147dp"
+        android:layout_marginBottom="144dp"
         android:scrollbars="vertical"
         android:verticalScrollbarPosition="right"
         app:layout_constraintBottom_toBottomOf="@+id/adminNavigation"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.083"
         app:layout_constraintStart_toStartOf="parent" />
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
@@ -79,4 +78,14 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         tools:ignore="MissingConstraints" />
+
+    <Button
+        android:id="@+id/crearRutaButton"
+        android:layout_width="222dp"
+        android:layout_height="47dp"
+        android:layout_marginLeft="92dp"
+        android:layout_marginTop="560dp"
+        android:text="Guardar ruta"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/navigationView2" />
 </androidx.constraintlayout.widget.ConstraintLayout>

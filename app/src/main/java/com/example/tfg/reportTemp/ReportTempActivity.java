@@ -30,6 +30,7 @@ import com.example.tfg.reportAdd.SelectPhotoActivity;
 import com.example.tfg.route.RouteActivity;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationBarView;
+import com.google.android.material.snackbar.Snackbar;
 
 import java.io.IOException;
 import java.text.ParseException;
@@ -137,10 +138,10 @@ public class ReportTempActivity extends AppCompatActivity implements DatePickerD
                 String type = typeSpinner.getSelectedItem().toString();
 
                 if (!checkDate()) {
-                    Toast.makeText(ReportTempActivity.this, "Fecha de inicio menor o igual que la fecha de fin", Toast.LENGTH_LONG).show();
+                    Snackbar.make(findViewById(android.R.id.content), "Fecha de inicio menor o igual que la fecha de fin", Snackbar.LENGTH_LONG).show();
                 }
                 else if (ubiReportTextView != null && numberOfPhotos >= 2 && type.length() > 0) {
-                    Toast.makeText(ReportTempActivity.this, "Contenedor creado", Toast.LENGTH_SHORT).show();
+                    Snackbar.make(findViewById(android.R.id.content), "Contenedor creado", Snackbar.LENGTH_SHORT).show();
                     Intent intent = new Intent(ReportTempActivity.this, AdminPanelActivity.class);
 
                     // Crear el cuadro de diálogo emergente
@@ -168,13 +169,13 @@ public class ReportTempActivity extends AppCompatActivity implements DatePickerD
 
                             if (titulo.length() < 3) {
                                 // Si el título tiene menos de 3 caracteres, mostrar un mensaje de error
-                                Toast.makeText(ReportTempActivity.this, "El título debe tener al menos 3 caracteres", Toast.LENGTH_SHORT).show();
+                                Snackbar.make(findViewById(android.R.id.content), "El título debe tener al menos 3 caracteres", Snackbar.LENGTH_SHORT).show();
                             } else if (descripcion.length() < 10) {
                                 // Si la descripción tiene menos de 10 caracteres, mostrar un mensaje de error
-                                Toast.makeText(ReportTempActivity.this, "La descripción debe tener al menos 10 caracteres", Toast.LENGTH_SHORT).show();
+                                Snackbar.make(findViewById(android.R.id.content), "La descripción debe tener al menos 10 caracteres", Snackbar.LENGTH_SHORT).show();
                             } else {
                                 dialog.dismiss();
-                                Toast.makeText(ReportTempActivity.this, "Aviso creado", Toast.LENGTH_LONG).show();
+                                Snackbar.make(findViewById(android.R.id.content), "Aviso creado", Snackbar.LENGTH_LONG).show();
                                 Intent intent = new Intent(ReportTempActivity.this, AdminPanelActivity.class);
                                 startActivity(intent);
                                 finish();
@@ -195,7 +196,7 @@ public class ReportTempActivity extends AppCompatActivity implements DatePickerD
                     // Mostrar el cuadro de diálogo emergente
                     dialog.show();
                 } else {
-                    Toast.makeText(ReportTempActivity.this, "Por favor, completa todos los campos", Toast.LENGTH_SHORT).show();
+                    Snackbar.make(findViewById(android.R.id.content), "Por favor, completa todos los campos", Snackbar.LENGTH_SHORT).show();
                 }
             }
         });

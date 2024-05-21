@@ -7,10 +7,8 @@ import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
@@ -18,8 +16,8 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.tfg.R;
 import com.example.tfg.map.MapActivity;
-import com.example.tfg.reportAdd.ReportActivity;
 import com.example.tfg.reportAdd.SelectPhotoActivity;
+import com.google.android.material.snackbar.Snackbar;
 
 public class ReportModActivity extends AppCompatActivity {
 
@@ -100,7 +98,7 @@ public class ReportModActivity extends AppCompatActivity {
                 String status = estadoSpinner.getSelectedItem().toString();
 
                 if (commentsText.length() < 15) {
-                    Toast.makeText(ReportModActivity.this, "Mínimo de 15 caracteres como descripción", Toast.LENGTH_SHORT).show();
+                    Snackbar.make(findViewById(android.R.id.content), "Mínimo de 15 caracteres como descripción", Snackbar.LENGTH_SHORT).show();
                     return;
                 }
 
@@ -123,12 +121,12 @@ public class ReportModActivity extends AppCompatActivity {
                 }
 
                 if (isRequestValid) {
-                    Toast.makeText(ReportModActivity.this, "Solicitud enviada", Toast.LENGTH_SHORT).show();
+                    Snackbar.make(findViewById(android.R.id.content), "Solicitud enviada", Snackbar.LENGTH_SHORT).show();
                     Intent intent = new Intent(ReportModActivity.this, MapActivity.class);
                     startActivity(intent);
                     finish();
                 } else {
-                    Toast.makeText(ReportModActivity.this, "Por favor, completa todos los campos", Toast.LENGTH_SHORT).show();
+                    Snackbar.make(findViewById(android.R.id.content), "Por favor, completa todos los campos", Snackbar.LENGTH_SHORT).show();
                 }
             }
         });

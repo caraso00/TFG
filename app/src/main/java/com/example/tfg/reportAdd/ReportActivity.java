@@ -3,7 +3,6 @@ package com.example.tfg.reportAdd;
 import android.content.Intent;
 import android.location.Address;
 import android.location.Geocoder;
-import android.net.Uri;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
@@ -11,7 +10,6 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
@@ -24,6 +22,7 @@ import com.example.tfg.map.MapActivity;
 import com.example.tfg.profile.ProfileActivity;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationBarView;
+import com.google.android.material.snackbar.Snackbar;
 
 import java.io.IOException;
 import java.util.List;
@@ -105,12 +104,12 @@ public class ReportActivity extends AppCompatActivity {
                 String status = statusSpinner.getSelectedItem().toString();
 
                 if (ubiReportTextView != null && numberOfPhotos >= 2 && type.length() > 0 && status.length() > 0) {
-                    Toast.makeText(ReportActivity.this, "Solicitud enviada", Toast.LENGTH_SHORT).show();
+                    Snackbar.make(findViewById(android.R.id.content), "Solicitud enviada", Snackbar.LENGTH_SHORT).show();
                     Intent intent = new Intent(ReportActivity.this, MapActivity.class);
                     startActivity(intent);
                     finish();
                 } else {
-                    Toast.makeText(ReportActivity.this, "Por favor, completa todos los campos", Toast.LENGTH_SHORT).show();
+                    Snackbar.make(findViewById(android.R.id.content), "Por favor, completa todos los campos", Snackbar.LENGTH_SHORT).show();
                 }
             }
         });

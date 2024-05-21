@@ -1,5 +1,7 @@
-<!-- res/layout/fragment_contenedor_details.xml -->
+<?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:textAlignment="center"
@@ -7,7 +9,7 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="348dp"
+        android:layout_height="594dp"
         android:layout_alignParentTop="true"
         android:background="@android:color/white"
         android:elevation="5dp"
@@ -85,5 +87,59 @@
                 android:textAlignment="center"
                 android:textColor="#000000" />
         </LinearLayout>
+
+        <TextView
+            android:id="@+id/rating_title"
+            android:layout_width="243dp"
+            android:layout_height="29dp"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="30dp"
+            android:text="Valoracion"
+            android:textAlignment="center"
+            android:textColor="#000000"
+            android:textSize="20sp" />
+
+        <RatingBar
+            android:id="@+id/dialog_current_rating_bar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="7dp"
+            android:isIndicator="true"
+            android:numStars="5"
+            android:progressTint="#FFEB3B"
+            android:rating="3.5"
+            android:stepSize="0.1" />
+
+        <!-- TextView para mostrar la valoración actual -->
+        <TextView
+            android:id="@+id/dialog_current_rating_value"
+            android:layout_width="241dp"
+            android:layout_height="17dp"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="0dp"
+            android:text="Valoracion"
+            android:textAlignment="center" />
+
+        <!-- RatingBar para la nueva valoración -->
+        <RatingBar
+            android:id="@+id/dialog_new_rating_bar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="40dp"
+            android:numStars="5"
+            android:progressTint="#FFEB3B"
+            android:rating="0"
+            android:stepSize="0.1" />
+
+        <TextView
+            android:id="@+id/dialog_ur_rating_value"
+            android:layout_width="241dp"
+            android:layout_height="17dp"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="0dp"
+            android:text="Añade tu valoracion"
+            android:textAlignment="center" />
     </LinearLayout>
 </RelativeLayout>

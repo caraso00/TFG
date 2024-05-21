@@ -322,7 +322,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
 
         // Agrega los marcadores según la selección del usuario
         if (checkSelectedItems(selectedItems, "Orgánico")) {
-            BinDetails details = new BinDetails("Contenedor marrón", showAddressFromLocation(punto1.latitude, punto1.longitude), "Orgánico", "Bueno", R.drawable.contenedor_marron);
+            BinDetails details = new BinDetails("Contenedor marrón", showAddressFromLocation(punto1.latitude, punto1.longitude), "Orgánico", "Bueno", R.drawable.contenedor_marron, (float) 4.2);
             Marker marker = mMap.addMarker(new MarkerOptions()
                     .position(punto1)
                     .title("Contenedor marrón")
@@ -330,7 +330,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
             marker.setTag(details);
         }
         if (checkSelectedItems(selectedItems,"Plástico") && seleccion >= 2) {
-            BinDetails details = new BinDetails("Contenedor amarillo", showAddressFromLocation(punto2.latitude, punto2.longitude), "Plástico", "Perfecto", R.drawable.contenedor_amarillo);
+            BinDetails details = new BinDetails("Contenedor amarillo", showAddressFromLocation(punto2.latitude, punto2.longitude), "Plástico", "Perfecto", R.drawable.contenedor_amarillo, 5);
             Marker marker = mMap.addMarker(new MarkerOptions()
                     .position(punto2)
                     .title("Contenedor amarillo")
@@ -338,7 +338,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
             marker.setTag(details);
         }
         if (checkSelectedItems(selectedItems,"Papel y cartón") && seleccion == 3) {
-            BinDetails details = new BinDetails("Contenedor amarillo", showAddressFromLocation(punto3.latitude, punto3.longitude), "Papel y cartón", "Sucio", R.drawable.contenedor_azul);
+            BinDetails details = new BinDetails("Contenedor amarillo", showAddressFromLocation(punto3.latitude, punto3.longitude), "Papel y cartón", "Sucio", R.drawable.contenedor_azul, (float) 2.7);
             Marker marker = mMap.addMarker(new MarkerOptions()
                     .position(punto3)
                     .title("Contenedor azul")

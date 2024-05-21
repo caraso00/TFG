@@ -1,8 +1,10 @@
 package com.example.tfg.route;
 
 import android.Manifest;
+import android.app.AlertDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.IntentSender;
@@ -16,13 +18,12 @@ import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationManager;
 import android.os.Bundle;
+import android.text.InputType;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
-import android.widget.LinearLayout;
-import android.widget.TextView;
-import android.widget.Toast;
+import android.widget.EditText;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -53,6 +54,7 @@ import com.google.android.gms.maps.model.PolylineOptions;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationBarView;
+import com.google.android.material.snackbar.Snackbar;
 import com.google.maps.model.DirectionsLeg;
 import com.google.maps.model.DirectionsResult;
 import com.google.maps.model.DirectionsRoute;
@@ -61,10 +63,8 @@ import com.google.maps.model.DirectionsStep;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
-import java.util.Set;
 
 public class RouteActivity extends AppCompatActivity implements OnMapReadyCallback, GoogleMap.OnMarkerClickListener {
 
@@ -84,6 +84,7 @@ public class RouteActivity extends AppCompatActivity implements OnMapReadyCallba
     private BitmapDescriptor contenedorAmarillo;
     private BitmapDescriptor contenedorAzul;
     private Marker selectedMarker;
+    private Button crearRutaButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -168,7 +169,7 @@ public class RouteActivity extends AppCompatActivity implements OnMapReadyCallba
                     LatLng selectedLatLng = selectedMarker.getPosition(); // Obtenemos la posición del marcador seleccionado
                     String address = getAddressFromLocation(selectedLatLng.latitude, selectedLatLng.longitude); // Obtenemos la dirección correspondiente a la posición
 
-                    BinDetails binDetails = new BinDetails(selectedMarker.getTitle(), address, "Tipo", "Estado",R.drawable.ic_launcher_foreground);
+                    BinDetails binDetails = new BinDetails(selectedMarker.getTitle(), address, "Tipo", "Estado",R.drawable.ic_launcher_foreground, (float) 5.0);
                     addBinToLayout(binDetails, selectedBins); // Agregamos el contenedor al diseño
 
                     //  Hay que pagar y lo va a hacer tu padre
@@ -177,6 +178,19 @@ public class RouteActivity extends AppCompatActivity implements OnMapReadyCallba
 
                     selectedMarker = null; // Reiniciamos después de añadir a la ruta
                     addToRouteButton.setEnabled(false); // Ocultamos el botón después de añadir a la ruta
+                }
+            }
+        });
+
+        crearRutaButton = findViewById(R.id.crearRutaButton);
+
+        crearRutaButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (selectedBins.size() >= 2) {
+                    showNameInputDialog();
+                } else {
+                    Snackbar.make(findViewById(android.R.id.content), "Mínimo 2 contenedores para crear una ruta", Snackbar.LENGTH_SHORT).show();
                 }
             }
         });
@@ -294,6 +308,42 @@ public class RouteActivity extends AppCompatActivity implements OnMapReadyCallba
         }
     }
 
+    // Método para mostrar el diálogo de entrada del nombre
+    private void showNameInputDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Nombre de la Ruta");
+
+        // Configurar el input
+        final EditText input = new EditText(this);
+        input.setInputType(InputType.TYPE_CLASS_TEXT);
+        builder.setView(input);
+
+        // Configurar los botones
+        builder.setPositiveButton("Aceptar", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                String routeName = input.getText().toString();
+                if (routeName.length() >= 3) {
+                    Snackbar.make(findViewById(android.R.id.content), "Ruta creada", Snackbar.LENGTH_SHORT).show();
+                    // Limpia los datos y notifica al adaptador
+                    selectedBins.clear();
+                    binAdapter.notifyDataSetChanged();
+                } else {
+                    Snackbar.make(findViewById(android.R.id.content), "El nombre debe tener al menos 3 caracteres", Snackbar.LENGTH_SHORT).show();
+                    showNameInputDialog();  // Mostrar el diálogo nuevamente si la longitud es insuficiente
+                }
+            }
+        });
+        builder.setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.cancel();
+            }
+        });
+
+        builder.show();
+    }
+
     private Bitmap drawableToBitmap(Drawable drawable) {
         Bitmap bitmap = Bitmap.createBitmap(100, 100, Bitmap.Config.ARGB_8888);
         Canvas canvas = new Canvas(bitmap);
@@ -320,7 +370,7 @@ public class RouteActivity extends AppCompatActivity implements OnMapReadyCallba
     // Agregar detalles del contenedor al LinearLayout
     private void addBinToLayout(BinDetails binDetails, List<BinDetails> selectedBins) {
         if (selectedBins.contains(binDetails)) {
-            Toast.makeText(this, "No se puede añadir dos veces el mismo contenedor", Toast.LENGTH_SHORT).show();
+            Snackbar.make(findViewById(android.R.id.content), "No se puede añadir dos veces el mismo contenedor", Snackbar.LENGTH_SHORT).show();
             return;
         }
 

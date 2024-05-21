@@ -17,7 +17,6 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
-import android.widget.Toast;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
@@ -32,8 +31,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.example.tfg.R;
-import com.example.tfg.points.PointsActivity;
-import com.example.tfg.profile.ProfileActivity;
+import com.google.android.material.snackbar.Snackbar;
 
 import java.io.File;
 import java.io.IOException;
@@ -95,7 +93,7 @@ public class SelectPhotoActivity extends AppCompatActivity {
             public void onClick(View v) {
                 if (imageContainer.getChildCount() >= 2) {
                     // Si hay al menos dos imágenes, mostrar un mensaje de imágenes correctas
-                    Toast.makeText(SelectPhotoActivity.this, "Imágenes correctas", Toast.LENGTH_SHORT).show();
+                    Snackbar.make(findViewById(android.R.id.content), "Imágenes correctas", Snackbar.LENGTH_SHORT).show();
                     // Volver a ReportActivity
                     Intent intent = new Intent();
                     intent.putExtra("numberOfPhotos", imageContainer.getChildCount());
@@ -103,7 +101,7 @@ public class SelectPhotoActivity extends AppCompatActivity {
                     finish(); // Finalizar la actividad actual
                 } else {
                     // Si hay menos de dos imágenes, mostrar un mensaje de advertencia
-                    Toast.makeText(SelectPhotoActivity.this, "Se requieren al menos 2 imágenes", Toast.LENGTH_SHORT).show();
+                    Snackbar.make(findViewById(android.R.id.content), "Se requieren al menos 2 imágenes", Snackbar.LENGTH_SHORT).show();
                 }
             }
         });
@@ -193,7 +191,7 @@ public class SelectPhotoActivity extends AppCompatActivity {
             try {
                 photoFile = createImageFile();
             } catch (IOException ex) {
-                Toast.makeText(SelectPhotoActivity.this, "Hubo un error al crear el archivo de la imagen", Toast.LENGTH_SHORT).show();
+                Snackbar.make(findViewById(android.R.id.content), "Hubo un error al crear el archivo de la imagen", Snackbar.LENGTH_SHORT).show();
             }
             if (photoFile != null) {
                 Uri photoURI = FileProvider.getUriForFile(this, "com.example.tfg.fileprovider", photoFile);
@@ -226,7 +224,7 @@ public class SelectPhotoActivity extends AppCompatActivity {
                             addPhotoToContainer(selectedImageUri);
                         }
                     } else {
-                        Toast.makeText(SelectPhotoActivity.this, "Mínimo de dos imágenes", Toast.LENGTH_SHORT).show();
+                        Snackbar.make(findViewById(android.R.id.content), "Mínimo de dos imágenes", Snackbar.LENGTH_SHORT).show();
                     }
                 }
             }

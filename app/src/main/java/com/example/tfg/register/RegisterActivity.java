@@ -12,6 +12,7 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.example.tfg.R;
 import com.example.tfg.ui.login.LoginActivity;
+import com.google.android.material.snackbar.Snackbar;
 
 public class RegisterActivity extends AppCompatActivity {
 
@@ -51,7 +52,7 @@ public class RegisterActivity extends AppCompatActivity {
 
             if(registrationFormState.isDataValid()) {
                 // User registration logic here (save the user data to your database)
-                Toast.makeText(RegisterActivity.this, "Usuario registrado!", Toast.LENGTH_SHORT).show();
+                Snackbar.make(findViewById(android.R.id.content), "Usuario registrado!", Snackbar.LENGTH_SHORT).show();
                 Intent intent = new Intent(RegisterActivity.this, LoginActivity.class);
                 startActivity(intent);
                 overridePendingTransition(R.anim.fade_in, R.anim.fade_out);

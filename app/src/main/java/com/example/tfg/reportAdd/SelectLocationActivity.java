@@ -26,6 +26,7 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.material.snackbar.Snackbar;
 
 import java.io.IOException;
 import java.util.List;
@@ -122,7 +123,7 @@ public class SelectLocationActivity extends AppCompatActivity implements OnMapRe
                     double longitude = location.getLongitude();
                     returnSelectedLocation(latitude, longitude); // Devolver las coordenadas de la ubicación actual del usuario
                 } else {
-                    Toast.makeText(SelectLocationActivity.this, "No se pudo obtener la ubicación actual del usuario", Toast.LENGTH_SHORT).show();
+                    Snackbar.make(findViewById(android.R.id.content), "No se pudo obtener la ubicación actual del usuario", Snackbar.LENGTH_SHORT).show();
                 }
             }
         });
