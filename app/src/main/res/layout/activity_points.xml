@@ -9,9 +9,9 @@
 
     <com.google.android.material.navigation.NavigationView
         android:id="@+id/background"
-        android:layout_width="506dp"
-        android:layout_height="294dp"
-        android:layout_marginBottom="190dp"
+        android:layout_width="510dp"
+        android:layout_height="350dp"
+        android:layout_marginBottom="150dp"
         android:background="#BAB9B9"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -33,19 +33,69 @@
         android:textSize="16sp"
         app:layout_constraintBottom_toTopOf="@+id/background"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.485"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/selectLocationButton" />
+        app:layout_constraintTop_toBottomOf="@+id/ubiTextView" />
 
-    <Button
-        android:id="@+id/selectLocationButton"
-        android:layout_width="288dp"
-        android:layout_height="52dp"
-        android:layout_marginTop="115dp"
-        android:text="Seleccionar Ubicación"
-        app:layout_constraintHorizontal_bias="0.495"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/registerText" />
+    <ImageView
+        android:id="@+id/imageView2"
+        android:layout_width="132dp"
+        android:layout_height="43dp"
+        android:layout_marginStart="4dp"
+        android:layout_marginTop="10dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView4"
+        app:srcCompat="@drawable/amazon" />
+
+    <ImageView
+        android:id="@+id/imageView3"
+        android:layout_width="132dp"
+        android:layout_height="43dp"
+        android:layout_marginTop="10dp"
+        app:layout_constraintStart_toEndOf="@+id/imageView2"
+        app:layout_constraintTop_toBottomOf="@+id/textView4"
+        app:srcCompat="@drawable/revolut" />
+
+    <ImageView
+        android:id="@+id/imageView4"
+        android:layout_width="140dp"
+        android:layout_height="45dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="4dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView4"
+        app:srcCompat="@drawable/paypal" />
+
+    <TextView
+        android:id="@+id/textView4"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="100dp"
+        android:layout_marginTop="30dp"
+        android:layout_marginEnd="100dp"
+        android:layout_marginBottom="4dp"
+        android:text="Tarjetas regalo"
+        android:textColor="#8A7D7D"
+        android:textSize="16sp"
+        app:layout_constraintBottom_toTopOf="@+id/imageView3"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.476"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/background" />
+
+    <TextView
+        android:id="@+id/ubiTextView"
+        android:layout_width="393dp"
+        android:layout_height="21dp"
+        android:layout_marginTop="184dp"
+        android:layout_marginEnd="10dp"
+        android:text="Ubicación"
+        android:textAlignment="center"
+        android:textColor="#000000"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <com.google.android.material.navigation.NavigationView
         android:id="@+id/navigationView2"
@@ -66,21 +116,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/back" />
-
-    <com.google.android.material.bottomnavigation.BottomNavigationView
-        android:id="@+id/navigation"
-        android:layout_width="412dp"
-        android:layout_height="82dp"
-        android:background="#000000"
-        app:itemIconTint="@color/white"
-        app:itemTextColor="#FFFFFF"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.515"
-        app:layout_constraintStart_toStartOf="parent"
-        app:menu="@menu/bottom_navigation_menu">
-
-    </com.google.android.material.bottomnavigation.BottomNavigationView>
 
     <TextView
         android:id="@+id/registerText"
@@ -110,8 +145,8 @@
         android:layout_marginEnd="124dp"
         android:indeterminateBehavior="repeat"
         android:indeterminateOnly="false"
-        android:progress="40"
         android:progressTint="@android:color/black"
+        android:max="5000"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/pointsTextView" />
@@ -125,55 +160,10 @@
         android:layout_marginEnd="126dp"
         android:text="Default"
         android:textAlignment="center"
+        android:textColor="#000000"
         android:textSize="16sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/navigationView2" />
-
-    <TextView
-        android:id="@+id/textView4"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="100dp"
-        android:layout_marginEnd="100dp"
-        android:layout_marginBottom="15dp"
-        android:text="Tarjetas regalo"
-        android:textColor="#8A7D7D"
-        android:textSize="16sp"
-        app:layout_constraintBottom_toTopOf="@+id/imageView3"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.495"
-        app:layout_constraintStart_toStartOf="parent" />
-
-    <ImageView
-        android:id="@+id/imageView2"
-        android:layout_width="132dp"
-        android:layout_height="43dp"
-        android:layout_marginStart="5dp"
-        android:layout_marginBottom="25dp"
-        app:layout_constraintBottom_toTopOf="@+id/navigation"
-        app:layout_constraintStart_toStartOf="parent"
-        app:srcCompat="@drawable/amazon" />
-
-    <ImageView
-        android:id="@+id/imageView3"
-        android:layout_width="132dp"
-        android:layout_height="43dp"
-        android:layout_marginEnd="1dp"
-        android:layout_marginBottom="25dp"
-        app:layout_constraintBottom_toTopOf="@+id/navigation"
-        app:layout_constraintEnd_toStartOf="@+id/imageView4"
-        app:layout_constraintStart_toEndOf="@+id/imageView2"
-        app:srcCompat="@drawable/revolut" />
-
-    <ImageView
-        android:id="@+id/imageView4"
-        android:layout_width="140dp"
-        android:layout_height="45dp"
-        android:layout_marginEnd="5dp"
-        android:layout_marginBottom="25dp"
-        app:layout_constraintBottom_toTopOf="@+id/navigation"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:srcCompat="@drawable/paypal" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -22,12 +22,16 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.recyclerview.widget.ItemTouchHelper;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.tfg.R;
 import com.example.tfg.adminPanel.AdminPanelActivity;
@@ -56,8 +60,11 @@ import com.google.maps.model.DirectionsStep;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
+import java.util.Set;
 
 public class RouteActivity extends AppCompatActivity implements OnMapReadyCallback, GoogleMap.OnMarkerClickListener {
 
@@ -65,8 +72,9 @@ public class RouteActivity extends AppCompatActivity implements OnMapReadyCallba
     private GoogleMap mMap;
     private LatLng selectedLatLng;
     private static final int REQUEST_CHECK_SETTINGS = 1;
+    private BinAdapter binAdapter;
     private Button addToRouteButton;
-    private LinearLayout selectedBinsLayout;
+    private RecyclerView binsRecyclerView;
     private List<BinDetails> selectedBins = new ArrayList<>();
     private List<LatLng> routePoints = new ArrayList<>();
     private Drawable contenedorMarronIcon;
@@ -84,9 +92,6 @@ public class RouteActivity extends AppCompatActivity implements OnMapReadyCallba
 
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
-
-        addToRouteButton = findViewById(R.id.addToRouteButton);
-        selectedBinsLayout = findViewById(R.id.selectedBinsLayout);
 
         viewModel = new ViewModelProvider(this).get(RouteViewModel.class);
 
@@ -132,6 +137,30 @@ public class RouteActivity extends AppCompatActivity implements OnMapReadyCallba
             }
         });
 
+        binsRecyclerView = findViewById(R.id.binsRecyclerView);
+        binsRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+        binAdapter = new BinAdapter(selectedBins);
+        binsRecyclerView.setAdapter(binAdapter);
+
+        ItemTouchHelper itemTouchHelper = new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(ItemTouchHelper.UP, ItemTouchHelper.DOWN) {
+            @Override
+            public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, @NonNull RecyclerView.ViewHolder target) {
+                int fromPosition = viewHolder.getBindingAdapterPosition();
+                int toPosition = target.getBindingAdapterPosition();
+                moveItem(fromPosition, toPosition);
+                return true;
+            }
+
+            @Override
+            public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
+                int position = viewHolder.getBindingAdapterPosition();
+                removeBin(position);
+            }
+        });
+        itemTouchHelper.attachToRecyclerView(binsRecyclerView);
+
+        addToRouteButton = findViewById(R.id.addToRouteButton);
+
         addToRouteButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -140,13 +169,11 @@ public class RouteActivity extends AppCompatActivity implements OnMapReadyCallba
                     String address = getAddressFromLocation(selectedLatLng.latitude, selectedLatLng.longitude); // Obtenemos la dirección correspondiente a la posición
 
                     BinDetails binDetails = new BinDetails(selectedMarker.getTitle(), address, "Tipo", "Estado",R.drawable.ic_launcher_foreground);
-
-                    selectedBins.add(binDetails); // Añadimos los detalles del contenedor a la lista seleccionada
-                    addBinToLayout(binDetails); // Agregamos el contenedor al diseño
-                    routePoints.add(selectedLatLng);
+                    addBinToLayout(binDetails, selectedBins); // Agregamos el contenedor al diseño
 
                     //  Hay que pagar y lo va a hacer tu padre
                     //drawRoute(); // Dibujamos la ruta en el mapa
+                    //routePoints.add(selectedLatLng);
 
                     selectedMarker = null; // Reiniciamos después de añadir a la ruta
                     addToRouteButton.setEnabled(false); // Ocultamos el botón después de añadir a la ruta
@@ -291,10 +318,27 @@ public class RouteActivity extends AppCompatActivity implements OnMapReadyCallba
     }
 
     // Agregar detalles del contenedor al LinearLayout
-    private void addBinToLayout(BinDetails binDetails) {
-        TextView binTextView = new TextView(this);
-        binTextView.setText(String.format("%s: %s", binDetails.getTitulo(), binDetails.getUbicacion()));
-        selectedBinsLayout.addView(binTextView);
+    private void addBinToLayout(BinDetails binDetails, List<BinDetails> selectedBins) {
+        if (selectedBins.contains(binDetails)) {
+            Toast.makeText(this, "No se puede añadir dos veces el mismo contenedor", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        selectedBins.add(binDetails);
+        binAdapter.notifyItemInserted(selectedBins.size() - 1);
+    }
+
+    public void removeBin(int position) {
+        Log.d("BinAdapter", "Removing item at position " + position);
+        selectedBins.remove(position);
+        binAdapter.notifyItemRemoved(position);
+    }
+
+    public void moveItem(int fromPosition, int toPosition) {
+        Log.d("BinAdapter", "Moving item from " + fromPosition + " to " + toPosition);
+        Collections.swap(selectedBins, fromPosition, toPosition);
+        binAdapter.notifyItemMoved(fromPosition, toPosition);
+        Log.d("BinAdapter", selectedBins.toString());
     }
 
     private void drawRoute() {

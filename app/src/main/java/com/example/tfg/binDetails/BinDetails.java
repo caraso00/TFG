@@ -1,6 +1,7 @@
 package com.example.tfg.binDetails;
 
 import java.io.Serializable;
+import java.util.Objects;
 
 public class BinDetails implements Serializable {
 
@@ -38,5 +39,19 @@ public class BinDetails implements Serializable {
 
     public int getImagenResId() {
         return imagenResId;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        BinDetails that = (BinDetails) o;
+        return Objects.equals(titulo, that.titulo) &&
+                Objects.equals(ubicacion, that.ubicacion);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(titulo, ubicacion);
     }
 }

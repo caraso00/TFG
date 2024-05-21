@@ -4,17 +4,18 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:textAlignment="center"
-    android:background="#FFFFFF">
+    android:background="#FFFFFF"
+    android:scrollbarSize="10dp"
+    android:textAlignment="center">
 
     <com.google.android.material.navigation.NavigationView
         android:id="@+id/navigationView2"
-        tools:ignore="MissingConstraints"
-        tools:layout_editor_absoluteX="0dp"
         android:layout_width="427dp"
         android:layout_height="100dp"
         android:background="#000000"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        tools:ignore="MissingConstraints"
+        tools:layout_editor_absoluteX="0dp" />
 
     <fragment
         android:id="@+id/map"
@@ -32,21 +33,23 @@
         android:id="@+id/addToRouteButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Añadir a la ruta"
         android:enabled="false"
-        app:layout_constraintTop_toBottomOf="@id/map"
-        app:layout_constraintStart_toStartOf="parent"
+        android:text="Añadir a la ruta"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintBottom_toTopOf="@id/selectedBinsLayout" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/map" />
 
-    <LinearLayout
-        android:id="@+id/selectedBinsLayout"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:orientation="vertical"
-        android:padding="8dp"
-        app:layout_constraintTop_toBottomOf="@id/addToRouteButton"
-        app:layout_constraintBottom_toTopOf="@id/adminNavigation" />
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/binsRecyclerView"
+        android:layout_width="400dp"
+        android:layout_height="153dp"
+        android:layout_marginBottom="83dp"
+        android:scrollbars="vertical"
+        android:verticalScrollbarPosition="right"
+        app:layout_constraintBottom_toBottomOf="@+id/adminNavigation"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.083"
+        app:layout_constraintStart_toStartOf="parent" />
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/adminNavigation"
@@ -65,7 +68,6 @@
 
     <TextView
         android:id="@+id/panelPersonalText"
-        tools:ignore="MissingConstraints"
         android:layout_width="409dp"
         android:layout_height="58dp"
         android:layout_marginTop="15dp"
@@ -75,5 +77,6 @@
         android:textSize="38sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        tools:ignore="MissingConstraints" />
 </androidx.constraintlayout.widget.ConstraintLayout>
