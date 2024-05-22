@@ -127,6 +127,25 @@
 
     </com.google.android.material.navigation.NavigationView>
 
+    <ScrollView
+        android:id="@+id/scrollView"
+        android:layout_width="383dp"
+        android:layout_height="289dp"
+        android:layout_marginTop="40dp"
+        android:fadeScrollbars="false"
+        android:scrollbars="vertical"
+        app:layout_constraintBottom_toTopOf="@+id/navigation"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/pointsTextView">
+
+        <LinearLayout
+            android:id="@+id/container"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"></LinearLayout>
+    </ScrollView>
+
     <TextView
         android:id="@+id/contedoresCreadosTextView"
         android:layout_width="138dp"
@@ -169,5 +188,16 @@
         app:layout_constraintBottom_toTopOf="@+id/background"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/userNameTextView" />
+
+    <TextView
+        android:id="@+id/textView6"
+        android:layout_width="382dp"
+        android:layout_height="26dp"
+        android:text="Registro de actividad"
+        android:textAlignment="center"
+        android:textColor="#000000"
+        android:textSize="20sp"
+        app:layout_constraintTop_toBottomOf="@+id/contenedoresModificadosTextView"
+        tools:layout_editor_absoluteX="14dp" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

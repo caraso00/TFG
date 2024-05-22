@@ -45,6 +45,7 @@
         android:layout_height="147dp"
         android:layout_marginBottom="144dp"
         android:scrollbars="vertical"
+        android:fadeScrollbars="false"
         android:verticalScrollbarPosition="right"
         app:layout_constraintBottom_toBottomOf="@+id/adminNavigation"
         app:layout_constraintEnd_toEndOf="parent"

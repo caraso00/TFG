@@ -8,9 +8,12 @@ import android.os.Bundle;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.style.ForegroundColorSpan;
+import android.view.Gravity;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -27,6 +30,7 @@ import com.google.android.material.navigation.NavigationBarView;
 public class ProfileActivity extends AppCompatActivity {
 
     private ImageView pointView;
+    private LinearLayout container;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -82,6 +86,12 @@ public class ProfileActivity extends AppCompatActivity {
         BottomNavigationView logout = findViewById(R.id.logout);
         logout.setSelectedItemId(R.id.invisible);
 
+        container = findViewById(R.id.container);
+        // Ejemplo de añadir elementos dinámicamente
+        addItem("2024-05-23", "Contenedor creado", R.drawable.contenedor_marron);
+        addItem("2024-05-23", "Contenedor creado", R.drawable.contenedor_azul);
+        addItem("2024-05-19", "Contenedor creado", R.drawable.contenedor_amarillo);
+
         logout.setOnItemSelectedListener(new NavigationBarView.OnItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
@@ -100,6 +110,75 @@ public class ProfileActivity extends AppCompatActivity {
         spannableString.setSpan(new ForegroundColorSpan(Color.BLACK), 0, String.valueOf(number).length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
         spannableString.setSpan(new ForegroundColorSpan(Color.parseColor("#8A7D7D")), String.valueOf(number).length() + 1, text.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
         textView.setText(spannableString);
+    }
+
+    private void addItem(String date, String content, int imageResource) {
+        // Contenedor para cada elemento
+        LinearLayout itemLayout = new LinearLayout(this);
+        itemLayout.setOrientation(LinearLayout.VERTICAL);
+        LinearLayout.LayoutParams itemLayoutParams = new LinearLayout.LayoutParams(
+                ViewGroup.LayoutParams.MATCH_PARENT,
+                ViewGroup.LayoutParams.WRAP_CONTENT);
+        itemLayoutParams.setMargins(0, 5, 0, 5); // Márgenes laterales y verticales
+        itemLayout.setLayoutParams(itemLayoutParams);
+        itemLayout.setPadding(16, 16, 16, 16);
+        itemLayout.setBackgroundResource(R.drawable.border);
+        itemLayout.setGravity(Gravity.CENTER);
+
+        // ImageView para la imagen en la parte superior
+        ImageView imageView = new ImageView(this);
+        LinearLayout.LayoutParams imageLayoutParams = new LinearLayout.LayoutParams(300,200); // Puedes ajustar la altura según sea necesario
+        imageLayoutParams.setMargins(0,0,0,32);
+        imageView.setLayoutParams(imageLayoutParams);
+        imageView.setImageResource(imageResource);
+
+
+        // LinearLayout horizontal para la fecha y el contenido
+        LinearLayout textLayout = new LinearLayout(this);
+        textLayout.setOrientation(LinearLayout.HORIZONTAL);
+        textLayout.setLayoutParams(new LinearLayout.LayoutParams(
+                ViewGroup.LayoutParams.MATCH_PARENT,
+                ViewGroup.LayoutParams.WRAP_CONTENT));
+        textLayout.setPadding(8, 8, 8, 8);
+
+        TextView dateTextView = new TextView(this);
+        dateTextView.setLayoutParams(new LinearLayout.LayoutParams(
+                0,
+                ViewGroup.LayoutParams.WRAP_CONTENT, 1));
+        dateTextView.setText(date);
+        dateTextView.setTextAlignment(View.TEXT_ALIGNMENT_TEXT_START);
+        dateTextView.setTextColor(getResources().getColor(R.color.black));
+        dateTextView.setTextSize(16);
+
+        // Línea separadora
+        View separator = new View(this);
+        LinearLayout.LayoutParams separatorParams = new LinearLayout.LayoutParams(
+                1, // Ancho de la línea
+                ViewGroup.LayoutParams.MATCH_PARENT);
+        separatorParams.setMargins(-325, 0, 150, 0); // Márgenes de la línea
+        separator.setLayoutParams(separatorParams);
+        separator.setBackgroundColor(Color.BLACK);
+
+        TextView contentTextView = new TextView(this);
+        contentTextView.setLayoutParams(new LinearLayout.LayoutParams(
+                0,
+                ViewGroup.LayoutParams.WRAP_CONTENT, 1));
+        contentTextView.setText(content);
+        contentTextView.setTextAlignment(View.TEXT_ALIGNMENT_VIEW_START);
+        contentTextView.setTextColor(getResources().getColor(R.color.black));
+        contentTextView.setTextSize(16);
+
+        // Agregar TextViews al layout horizontal
+        textLayout.addView(dateTextView);
+        textLayout.addView(separator);
+        textLayout.addView(contentTextView);
+
+        // Agregar ImageView y layout de textos al layout del elemento
+        itemLayout.addView(imageView);
+        itemLayout.addView(textLayout);
+
+        // Agregar el layout del elemento al contenedor
+        container.addView(itemLayout);
     }
 
     private void showLogoutConfirmationDialog() {
