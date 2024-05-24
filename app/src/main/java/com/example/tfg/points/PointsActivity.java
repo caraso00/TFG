@@ -96,9 +96,9 @@ public class PointsActivity extends AppCompatActivity {
                 }
 
                 // Ejemplo de añadir elementos dinámicamente
-                addItem(ubicacion, "Verduras Paco", R.drawable.grocery_store);
-                addItem(ubicacion,"Suma", R.drawable.tienda);
-                addItem(ubicacion,"Peluqería canina", R.drawable.perros);
+                addItem(getAddressFromLocation(39.587968, -0.333460), "Verduras Paco", R.drawable.grocery_store);
+                addItem(getAddressFromLocation(39.589790, -0.333732),"Suma", R.drawable.tienda);
+                addItem(getAddressFromLocation(39.588189, -0.331616),"Peluqería canina", R.drawable.perros);
             }
         };
 
@@ -138,57 +138,55 @@ public class PointsActivity extends AppCompatActivity {
         itemLayout.setBackgroundResource(R.drawable.border);
         itemLayout.setGravity(Gravity.CENTER);
 
-        // ImageView para la imagen en la parte superior
+        // LinearLayout para el contenido (título)
+        LinearLayout contentLayout = new LinearLayout(this);
+        contentLayout.setOrientation(LinearLayout.VERTICAL);
+        contentLayout.setLayoutParams(new LinearLayout.LayoutParams(
+                ViewGroup.LayoutParams.MATCH_PARENT,
+                ViewGroup.LayoutParams.WRAP_CONTENT));
+        contentLayout.setPadding(8, 8, 8, 8);
+
+        TextView contentTextView = new TextView(this);
+        contentTextView.setLayoutParams(new LinearLayout.LayoutParams(
+                ViewGroup.LayoutParams.MATCH_PARENT,
+                ViewGroup.LayoutParams.WRAP_CONTENT));
+        contentTextView.setText(content);
+        contentTextView.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
+        contentTextView.setTextColor(getResources().getColor(R.color.black));
+        contentTextView.setTextSize(16);
+
+        contentLayout.addView(contentTextView);
+
         ImageView imageView = new ImageView(this);
-        LinearLayout.LayoutParams imageLayoutParams = new LinearLayout.LayoutParams(300,200); // Puedes ajustar la altura según sea necesario
-        imageLayoutParams.setMargins(0,0,0,32);
+        LinearLayout.LayoutParams imageLayoutParams = new LinearLayout.LayoutParams(300, 200); // Puedes ajustar la altura según sea necesario
+        imageLayoutParams.setMargins(0, 32, 0, 32);
         imageView.setLayoutParams(imageLayoutParams);
         imageView.setImageResource(imageResource);
 
 
-        // LinearLayout horizontal para la fecha y el contenido
-        LinearLayout textLayout = new LinearLayout(this);
-        textLayout.setOrientation(LinearLayout.HORIZONTAL);
-        textLayout.setLayoutParams(new LinearLayout.LayoutParams(
+        // LinearLayout para la ubicación
+        LinearLayout locationLayout = new LinearLayout(this);
+        locationLayout.setOrientation(LinearLayout.VERTICAL);
+        locationLayout.setLayoutParams(new LinearLayout.LayoutParams(
                 ViewGroup.LayoutParams.MATCH_PARENT,
                 ViewGroup.LayoutParams.WRAP_CONTENT));
-        textLayout.setPadding(8, 8, 8, 8);
+        locationLayout.setPadding(8, 8, 8, 8);
 
-        TextView dateTextView = new TextView(this);
-        dateTextView.setLayoutParams(new LinearLayout.LayoutParams(
-                0,
-                ViewGroup.LayoutParams.WRAP_CONTENT, 1));
-        dateTextView.setText(location);
-        dateTextView.setTextAlignment(View.TEXT_ALIGNMENT_TEXT_START);
-        dateTextView.setTextColor(getResources().getColor(R.color.black));
-        dateTextView.setTextSize(16);
+        TextView locationTextView = new TextView(this);
+        locationTextView.setLayoutParams(new LinearLayout.LayoutParams(
+                ViewGroup.LayoutParams.MATCH_PARENT,
+                ViewGroup.LayoutParams.WRAP_CONTENT));
+        locationTextView.setText(location);
+        locationTextView.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
+        locationTextView.setTextColor(getResources().getColor(R.color.black));
+        locationTextView.setTextSize(16);
 
-        // Línea separadora
-        View separator = new View(this);
-        LinearLayout.LayoutParams separatorParams = new LinearLayout.LayoutParams(
-                1, // Ancho de la línea
-                ViewGroup.LayoutParams.MATCH_PARENT);
-        separatorParams.setMargins(-325, 0, 150, 0); // Márgenes de la línea
-        separator.setLayoutParams(separatorParams);
-        separator.setBackgroundColor(Color.BLACK);
+        locationLayout.addView(locationTextView);
 
-        TextView contentTextView = new TextView(this);
-        contentTextView.setLayoutParams(new LinearLayout.LayoutParams(
-                0,
-                ViewGroup.LayoutParams.WRAP_CONTENT, 1));
-        contentTextView.setText(content);
-        contentTextView.setTextAlignment(View.TEXT_ALIGNMENT_VIEW_START);
-        contentTextView.setTextColor(getResources().getColor(R.color.black));
-        contentTextView.setTextSize(16);
-
-        // Agregar TextViews al layout horizontal
-        textLayout.addView(dateTextView);
-        textLayout.addView(separator);
-        textLayout.addView(contentTextView);
-
-        // Agregar ImageView y layout de textos al layout del elemento
+        // Agregar los LinearLayouts de contenido, imagen y ubicación al layout del elemento
+        itemLayout.addView(contentLayout);
         itemLayout.addView(imageView);
-        itemLayout.addView(textLayout);
+        itemLayout.addView(locationLayout);
 
         // Agregar el layout del elemento al contenedor
         container.addView(itemLayout);
