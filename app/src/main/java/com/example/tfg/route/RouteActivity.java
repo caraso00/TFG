@@ -85,6 +85,7 @@ public class RouteActivity extends AppCompatActivity implements OnMapReadyCallba
     private BitmapDescriptor contenedorAzul;
     private Marker selectedMarker;
     private Button crearRutaButton;
+    private String externalRouteName = new String();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -160,6 +161,8 @@ public class RouteActivity extends AppCompatActivity implements OnMapReadyCallba
         });
         itemTouchHelper.attachToRecyclerView(binsRecyclerView);
 
+        handleIncomingIntent();
+
         addToRouteButton = findViewById(R.id.addToRouteButton);
 
         addToRouteButton.setOnClickListener(new View.OnClickListener() {
@@ -169,7 +172,7 @@ public class RouteActivity extends AppCompatActivity implements OnMapReadyCallba
                     LatLng selectedLatLng = selectedMarker.getPosition(); // Obtenemos la posición del marcador seleccionado
                     String address = getAddressFromLocation(selectedLatLng.latitude, selectedLatLng.longitude); // Obtenemos la dirección correspondiente a la posición
 
-                    BinDetails binDetails = new BinDetails(selectedMarker.getTitle(), address, "Tipo", "Estado",R.drawable.ic_launcher_foreground, (float) 5.0);
+                    BinDetails binDetails = new BinDetails(selectedMarker.getTitle(), address, null, null,0, (float) 0);
                     addBinToLayout(binDetails, selectedBins); // Agregamos el contenedor al diseño
 
                     //  Hay que pagar y lo va a hacer tu padre
@@ -188,7 +191,7 @@ public class RouteActivity extends AppCompatActivity implements OnMapReadyCallba
             @Override
             public void onClick(View v) {
                 if (selectedBins.size() >= 2) {
-                    showNameInputDialog();
+                    showNameInputDialog(externalRouteName);
                 } else {
                     Snackbar.make(findViewById(android.R.id.content), "Mínimo 2 contenedores para crear una ruta", Snackbar.LENGTH_SHORT).show();
                 }
@@ -206,6 +209,20 @@ public class RouteActivity extends AppCompatActivity implements OnMapReadyCallba
             }
         }
     };
+
+    private void handleIncomingIntent() {
+        Intent intent = getIntent();
+        if (intent != null && intent.hasExtra("routeName") && intent.hasExtra("bins")) {
+            externalRouteName = intent.getStringExtra("routeName");
+            List<BinDetails> binDetailsList = (List<BinDetails>) intent.getSerializableExtra("bins");
+
+            if (binDetailsList != null) {
+                selectedBins.clear();
+                selectedBins.addAll(binDetailsList);
+                binAdapter.notifyDataSetChanged();
+            }
+        }
+    }
 
     @Override
     protected void onResume() {
@@ -279,43 +296,16 @@ public class RouteActivity extends AppCompatActivity implements OnMapReadyCallba
     }
 
     // Mostrar la dirección correspondiente a las coordenadas en el TextView
-    private void showAddressFromLocation(double latitude, double longitude) {
-        Geocoder geocoder = new Geocoder(this, Locale.getDefault());
-        try {
-            List<Address> addresses = geocoder.getFromLocation(latitude, longitude, 1);
-            if (addresses != null && !addresses.isEmpty()) {
-                Address address = addresses.get(0);
-                StringBuilder addressBuilder = new StringBuilder();
-
-                // Obtener la calle y el número de la dirección
-                if (address.getThoroughfare() != null) {
-                    addressBuilder.append(address.getThoroughfare());
-                    if (address.getSubThoroughfare() != null) {
-                        addressBuilder.append(", ").append(address.getSubThoroughfare());
-                    }
-                }
-
-                // Obtener la localidad de la dirección
-                if (address.getLocality() != null) {
-                    if (addressBuilder.length() > 0) {
-                        addressBuilder.append(", ");
-                    }
-                    addressBuilder.append(address.getLocality());
-                }
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
 
     // Método para mostrar el diálogo de entrada del nombre
-    private void showNameInputDialog() {
+    private void showNameInputDialog(String routeName) {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("Nombre de la Ruta");
 
         // Configurar el input
         final EditText input = new EditText(this);
         input.setInputType(InputType.TYPE_CLASS_TEXT);
+        if (routeName != null) input.setText(routeName);
         builder.setView(input);
 
         // Configurar los botones
@@ -330,7 +320,7 @@ public class RouteActivity extends AppCompatActivity implements OnMapReadyCallba
                     binAdapter.notifyDataSetChanged();
                 } else {
                     Snackbar.make(findViewById(android.R.id.content), "El nombre debe tener al menos 3 caracteres", Snackbar.LENGTH_SHORT).show();
-                    showNameInputDialog();  // Mostrar el diálogo nuevamente si la longitud es insuficiente
+                    showNameInputDialog(routeName);  // Mostrar el diálogo nuevamente si la longitud es insuficiente
                 }
             }
         });
@@ -357,9 +347,27 @@ public class RouteActivity extends AppCompatActivity implements OnMapReadyCallba
         Geocoder geocoder = new Geocoder(this, Locale.getDefault());
         try {
             List<Address> addresses = geocoder.getFromLocation(latitude, longitude, 1);
-            if (!addresses.isEmpty()) {
+            if (addresses != null && !addresses.isEmpty()) {
                 Address address = addresses.get(0);
-                return address.getAddressLine(0);
+                StringBuilder addressBuilder = new StringBuilder();
+
+                // Obtener la calle y el número de la dirección
+                if (address.getThoroughfare() != null) {
+                    addressBuilder.append(address.getThoroughfare());
+                    if (address.getSubThoroughfare() != null) {
+                        addressBuilder.append(", ").append(address.getSubThoroughfare());
+                    }
+                }
+
+                // Obtener la localidad de la dirección
+                if (address.getLocality() != null) {
+                    if (addressBuilder.length() > 0) {
+                        addressBuilder.append(", ");
+                    }
+                    addressBuilder.append(address.getLocality());
+                }
+
+                return addressBuilder.toString();
             }
         } catch (IOException e) {
             e.printStackTrace();
