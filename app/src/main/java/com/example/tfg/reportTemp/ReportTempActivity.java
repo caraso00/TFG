@@ -294,11 +294,7 @@ public class ReportTempActivity extends AppCompatActivity implements DatePickerD
             Date fechaFin = sdf.parse(fechaFinStr);
 
             // La fecha de inicio es menor o igual que la fecha de fin
-            if (fechaInicio.compareTo(fechaFin) <= 0) {
-                return true;
-            } else {
-                return false;
-            }
+            return fechaInicio.compareTo(fechaFin) <= 0;
         } catch (ParseException e) {
             e.printStackTrace();
             return false;

@@ -7,9 +7,9 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 public class MultiSelectArrayAdapter extends ArrayAdapter<String> {
-    private Context mContext;
-    private ArrayList<String> items;
-    private boolean[] itemChecked;
+    private final Context mContext;
+    private final ArrayList<String> items;
+    private final boolean[] itemChecked;
 
     public MultiSelectArrayAdapter(Context context, int resource, ArrayList<String> objects) {
         super(context, resource, objects);

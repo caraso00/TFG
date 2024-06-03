@@ -5,14 +5,14 @@ import androidx.annotation.Nullable;
 public class RegistrationFormState {
 
     @Nullable
-    private Integer usernameError;
+    private final Integer usernameError;
     @Nullable
-    private Integer emailError;
+    private final Integer emailError;
     @Nullable
-    private Integer passwordError;
+    private final Integer passwordError;
     @Nullable
-    private Integer confirmPasswordError;
-    private boolean isDataValid;
+    private final Integer confirmPasswordError;
+    private final boolean isDataValid;
 
     RegistrationFormState(@Nullable Integer usernameError, @Nullable Integer emailError,
                           @Nullable Integer passwordError, @Nullable Integer confirmPasswordError) {

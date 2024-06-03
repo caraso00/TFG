@@ -15,12 +15,12 @@ import com.example.tfg.map.MapActivity;
 
 public class LoginViewModel extends ViewModel {
 
-    private MutableLiveData<LoginFormState> loginFormState = new MutableLiveData<>();
-    private MutableLiveData<LoginResult> loginResult = new MutableLiveData<>();
-    private LoginRepository loginRepository;
-    private MutableLiveData<String> toastMessage = new MutableLiveData<>();
+    private final MutableLiveData<LoginFormState> loginFormState = new MutableLiveData<>();
+    private final MutableLiveData<LoginResult> loginResult = new MutableLiveData<>();
+    private final LoginRepository loginRepository;
+    private final MutableLiveData<String> toastMessage = new MutableLiveData<>();
 
-    private MutableLiveData<Boolean> loginSuccessful = new MutableLiveData<>();
+    private final MutableLiveData<Boolean> loginSuccessful = new MutableLiveData<>();
 
     LoginViewModel(LoginRepository loginRepository) {
         this.loginRepository = loginRepository;

@@ -56,9 +56,7 @@ public class ProfileActivity extends AppCompatActivity {
                     startActivity(intent);
                     overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
                     finish();
-                } else if (id == R.id.navigation_profile) {
-                    return true;
-                }
+                } else return id == R.id.navigation_profile;
                 return false;
             }
         });

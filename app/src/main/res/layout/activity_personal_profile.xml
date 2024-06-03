@@ -9,36 +9,44 @@
 
     <ScrollView
         android:id="@+id/background"
-        android:layout_width="411dp"
-        android:layout_height="358dp"
+        android:layout_width="408dp"
+        android:layout_height="326dp"
         android:layout_marginTop="184dp"
         android:background="#BAB9B9"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/navigationView2">
-
-        <LinearLayout
-            android:id="@+id/activityContainer"
-            android:layout_width="match_parent"
-            android:layout_height="200dp"
-            android:orientation="vertical"
-            android:padding="8dp">
-
-        </LinearLayout>
-
-    </ScrollView>
+        app:layout_constraintTop_toBottomOf="@+id/navigationView2" />
 
     <TextView
         android:id="@+id/textView5"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="200dp"
         android:text="Registro de actividad"
         android:textAlignment="center"
         android:textColor="#000000"
-        app:layout_constraintTop_toBottomOf="@+id/navigationView2"
+        android:textSize="20sp"
+        app:layout_constraintTop_toBottomOf="@+id/contenedoresModificadosPersonal"
         tools:ignore="MissingConstraints"
         tools:layout_editor_absoluteX="1dp" />
+
+    <ScrollView
+        android:id="@+id/scrollView"
+        android:layout_width="371dp"
+        android:layout_height="285dp"
+        android:layout_marginTop="-10dp"
+        android:fadeScrollbars="false"
+        android:scrollbars="vertical"
+        app:layout_constraintBottom_toTopOf="@+id/personalNavigation"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/userNameTextView">
+
+        <LinearLayout
+            android:id="@+id/container"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"></LinearLayout>
+    </ScrollView>
 
     <TextView
         android:id="@+id/contenedoresBorradosPersonal"
@@ -106,7 +114,7 @@
         android:clickable="true"
         android:contentDescription="@string/description_add_photo"
         android:focusable="true"
-        android:src="@drawable/captura2"
+        android:src="@drawable/hombre_nariz_roja"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.056"
         app:layout_constraintStart_toStartOf="parent"

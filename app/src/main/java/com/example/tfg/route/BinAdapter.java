@@ -19,7 +19,7 @@ import java.util.Set;
 
 public class BinAdapter extends RecyclerView.Adapter<BinAdapter.BinViewHolder> {
 
-    private List<BinDetails> binList;
+    private final List<BinDetails> binList;
 
     public BinAdapter(List<BinDetails> binList) {
         this.binList = binList;

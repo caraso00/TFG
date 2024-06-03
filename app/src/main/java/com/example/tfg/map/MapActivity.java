@@ -187,7 +187,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         });
     }
 
-    private BroadcastReceiver locationProviderChangeReceiver = new BroadcastReceiver() {
+    private final BroadcastReceiver locationProviderChangeReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
             if (intent.getAction().equals(LocationManager.PROVIDERS_CHANGED_ACTION)) {
