@@ -75,8 +75,8 @@ public class RouteActivity extends AppCompatActivity implements OnMapReadyCallba
     private BinAdapter binAdapter;
     private Button addToRouteButton;
     private RecyclerView binsRecyclerView;
-    private List<BinDetails> selectedBins = new ArrayList<>();
-    private List<LatLng> routePoints = new ArrayList<>();
+    private final List<BinDetails> selectedBins = new ArrayList<>();
+    private final List<LatLng> routePoints = new ArrayList<>();
     private Drawable contenedorMarronIcon;
     private Drawable contenedorAmarilloIcon;
     private Drawable contenedorAzulIcon;
@@ -85,7 +85,7 @@ public class RouteActivity extends AppCompatActivity implements OnMapReadyCallba
     private BitmapDescriptor contenedorAzul;
     private Marker selectedMarker;
     private Button crearRutaButton;
-    private String externalRouteName = new String();
+    private String externalRouteName = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -199,7 +199,7 @@ public class RouteActivity extends AppCompatActivity implements OnMapReadyCallba
         });
     }
 
-    private BroadcastReceiver locationProviderChangeReceiver = new BroadcastReceiver() {
+    private final BroadcastReceiver locationProviderChangeReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
             if (intent.getAction().equals(LocationManager.PROVIDERS_CHANGED_ACTION)) {
@@ -257,7 +257,7 @@ public class RouteActivity extends AppCompatActivity implements OnMapReadyCallba
 
     @Override
     public boolean onMarkerClick(Marker marker) {
-        Log.d("MarkerClick", "Marker clicked: " + marker.getPosition().toString());
+        Log.d("MarkerClick", "Marker clicked: " + marker.getPosition());
         addToRouteButton.setEnabled(true);
         selectedMarker = marker; // Guardar el marcador seleccionado
         return true; // Devolver true para indicar que hemos manejado el clic

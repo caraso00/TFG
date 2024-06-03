@@ -33,7 +33,7 @@ public class AdminProfileActivity extends AppCompatActivity {
 
     private RouteAdapter routeAdapter;
     private RecyclerView routeRecyclerView;
-    private List<RouteDetails> routes = new ArrayList<>();
+    private final List<RouteDetails> routes = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,9 +61,7 @@ public class AdminProfileActivity extends AppCompatActivity {
                     startActivity(intent);
                     overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
                     finish();
-                } else if (id == R.id.navigation_admin_profile) {
-                    return true;
-                }
+                } else return id == R.id.navigation_admin_profile;
                 return false;
             }
         });

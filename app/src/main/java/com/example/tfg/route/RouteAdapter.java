@@ -16,7 +16,7 @@ import java.util.List;
 
 public class RouteAdapter extends RecyclerView.Adapter<RouteAdapter.RouteViewHolder> {
 
-    private List<RouteDetails> routeList;
+    private final List<RouteDetails> routeList;
 
     public RouteAdapter(List<RouteDetails> routeList) {
         this.routeList = routeList;

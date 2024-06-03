@@ -5,12 +5,12 @@ import java.util.Objects;
 
 public class BinDetails implements Serializable {
 
-    private String titulo;
-    private String ubicacion;
-    private String tipo;
-    private String estado;
-    private int imagenResId;
-    private float rating;
+    private final String titulo;
+    private final String ubicacion;
+    private final String tipo;
+    private final String estado;
+    private final int imagenResId;
+    private final float rating;
 
 
     public BinDetails(String titulo, String ubicacion, String tipo, String estado, int imagenResId, float rating) {

@@ -6,8 +6,8 @@ import java.io.Serializable;
 import java.util.List;
 
 public class RouteDetails implements Serializable {
-    private String titulo;
-    private List<BinDetails> binDetailsList;
+    private final String titulo;
+    private final List<BinDetails> binDetailsList;
 
     public RouteDetails(String titulo, List<BinDetails> binDetailsList) {
         this.titulo = titulo;

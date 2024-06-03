@@ -20,8 +20,8 @@ import com.google.android.gms.tasks.Task;
 
 public class MapViewModel extends ViewModel {
 
-    private MutableLiveData<Boolean> locationSettingResponse = new MutableLiveData<>();
-    private MutableLiveData<ResolvableApiException> resolvableApiException = new MutableLiveData<>();
+    private final MutableLiveData<Boolean> locationSettingResponse = new MutableLiveData<>();
+    private final MutableLiveData<ResolvableApiException> resolvableApiException = new MutableLiveData<>();
 
     private static final int LOCATION_PERMISSION_REQUEST_CODE = 1;
 

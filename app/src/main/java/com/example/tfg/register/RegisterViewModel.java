@@ -10,7 +10,7 @@ import com.example.tfg.R;
 
 public class RegisterViewModel extends ViewModel {
 
-    private MutableLiveData<RegistrationFormState> registrationFormState = new MutableLiveData<>();
+    private final MutableLiveData<RegistrationFormState> registrationFormState = new MutableLiveData<>();
 
     LiveData<RegistrationFormState> getRegistrationFormState() {
         return registrationFormState;
