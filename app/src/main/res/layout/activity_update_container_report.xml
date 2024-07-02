@@ -1,0 +1,168 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#FFFFFF">
+
+    <Button
+        android:id="@+id/aceptarButton"
+        android:layout_width="194dp"
+        android:layout_height="38dp"
+        android:layout_marginLeft="44dp"
+        android:layout_marginTop="564dp"
+        android:layout_marginEnd="16dp"
+        android:text="Aceptar solicitud"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/navigationView2"
+        tools:ignore="MissingConstraints" />
+
+    <Button
+        android:id="@+id/rechazarButton"
+        android:layout_width="194dp"
+        android:layout_height="38dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="564dp"
+        android:text="Rechazar solicitud"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/navigationView2"
+        tools:ignore="MissingConstraints" />
+
+    <com.google.android.material.navigation.NavigationView
+        android:id="@+id/navigationView2"
+        android:layout_width="427dp"
+        android:layout_height="85dp"
+        android:background="#000000"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:ignore="MissingConstraints"
+        tools:layout_editor_absoluteX="0dp">
+
+    </com.google.android.material.navigation.NavigationView>
+
+    <ImageView
+        android:id="@+id/seePhotoImageView"
+        android:layout_width="229dp"
+        android:layout_height="115dp"
+        android:layout_marginTop="156dp"
+        android:clickable="true"
+        android:contentDescription="@string/description_add_photo"
+        android:focusable="true"
+        android:src="@drawable/photos_icon"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/navigationView2" />
+
+    <Spinner
+        android:id="@+id/estadoSpinner"
+        android:layout_width="152dp"
+        android:layout_height="53dp"
+        android:layout_marginTop="4dp"
+        android:entries="@array/status_options"
+        app:layout_constraintHorizontal_bias="0.135"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/estadoSpinnerTitle" />
+
+    <TextView
+        android:id="@+id/estadoSpinnerTitle"
+        android:layout_width="152dp"
+        android:layout_height="37dp"
+        android:layout_marginTop="184dp"
+        android:text="Estado:"
+        android:textAlignment="center"
+        android:textColor="#000000"
+        android:textSize="24sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.085"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/navigationView2" />
+
+    <TextView
+        android:id="@+id/modText"
+        android:layout_width="406dp"
+        android:layout_height="48dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginEnd="5dp"
+        android:text="Modificar contenedor"
+        android:textAlignment="center"
+        android:textColor="#FFFFFF"
+        android:textColorHighlight="#000000"
+        android:textColorLink="@color/black"
+        android:textSize="32sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:ignore="MissingConstraints" />
+
+    <TextView
+        android:id="@+id/motivoContenedor"
+        android:layout_width="194dp"
+        android:layout_height="52dp"
+        android:layout_marginTop="30dp"
+        android:text="Motivo:"
+        android:textAlignment="center"
+        android:textColor="#000000"
+        android:textSize="34sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.497"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/navigationView2" />
+
+    <EditText
+        android:id="@+id/commentsText"
+        android:layout_width="349dp"
+        android:layout_height="134dp"
+        android:layout_marginStart="30dp"
+        android:layout_marginEnd="30dp"
+        android:layout_marginBottom="33dp"
+        android:background="@drawable/border_background"
+        android:breakStrategy="high_quality"
+        android:padding="10dp"
+        android:textColor="#8A8585"
+        app:layout_constraintBottom_toTopOf="@+id/aceptarButton"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <TextView
+        android:id="@+id/imageCountTextView"
+        android:layout_width="221dp"
+        android:layout_height="19dp"
+        android:layout_marginTop="5dp"
+        android:text="Imágenes: 3/2"
+        android:textAlignment="center"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.982"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/seePhotoImageView" />
+
+    <TextView
+        android:id="@+id/textView7"
+        android:layout_width="91dp"
+        android:layout_height="27dp"
+        android:layout_marginBottom="8dp"
+        android:text="Explicación"
+        android:textSize="16sp"
+        app:layout_constraintBottom_toTopOf="@+id/commentsText"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.109"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <TextView
+        android:id="@+id/motivoText"
+        android:layout_width="189dp"
+        android:layout_height="29dp"
+        android:layout_marginTop="8dp"
+        android:text="Cambiar estado"
+        android:textAlignment="center"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/motivoContenedor" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -147,6 +147,7 @@ public class ReportModActivity extends AppCompatActivity {
         tipoContenedorTextView.setVisibility(View.GONE);
         tipoSpinner.setVisibility(View.GONE);
         imageView.setVisibility(View.GONE);
+        imageCountTextView.setVisibility(View.GONE);
         selectLocationButton.setVisibility(View.GONE);
         ubiReportTextView.setVisibility(View.GONE);
         estadoContenedorTextView.setVisibility(View.GONE);
@@ -163,11 +164,13 @@ public class ReportModActivity extends AppCompatActivity {
                 tipoContenedorTextView.setVisibility(View.VISIBLE);
                 tipoSpinner.setVisibility(View.VISIBLE);
                 imageView.setVisibility(View.VISIBLE);
+                imageCountTextView.setVisibility(View.VISIBLE);
                 break;
             case 1:
                 estadoContenedorTextView.setVisibility(View.VISIBLE);
                 estadoSpinner.setVisibility(View.VISIBLE);
                 imageView.setVisibility(View.VISIBLE);
+                imageCountTextView.setVisibility(View.VISIBLE);
                 break;
             case 2:
                 selectLocationButton.setVisibility(View.VISIBLE);

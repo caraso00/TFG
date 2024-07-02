@@ -38,6 +38,18 @@
             android:value="AIzaSyBT3BkCpwiTinLqos5gesu8yKKwCTxe2Go" />
 
         <activity
+            android:name=".adminReports.ReportAddActivity"
+            android:exported="true"
+            android:label="ReportAddActivity"
+            android:screenOrientation="portrait" />
+
+        <activity
+            android:name=".adminReports.ReportUpdateActivity"
+            android:exported="true"
+            android:label="ReportUpdateActivity"
+            android:screenOrientation="portrait" />
+
+        <activity
             android:name=".reportMod.ReportModActivity"
             android:exported="true"
             android:label="ReportModActivity"
